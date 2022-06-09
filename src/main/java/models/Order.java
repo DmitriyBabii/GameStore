@@ -17,7 +17,6 @@ public class Order {
     Courier courier;
     Client client;
     List<Product> product;
-
     int price;
     Date startOrder;
     Date endOrder;

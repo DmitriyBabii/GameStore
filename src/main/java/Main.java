@@ -14,5 +14,7 @@ public class Main {
         Product product = new Product("Witcher 3", Date.valueOf(LocalDate.now()), text, 18, 1200);
         Storage storage = new Storage(product, 12);
         final ServiceHibernate sr = new ServiceHibernate();
+        System.out.println(Date.valueOf(LocalDate.now()));
+
     }
 }

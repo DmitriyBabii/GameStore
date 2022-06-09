@@ -19,9 +19,5 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
 
-        <!-- List of XML mapping files
-        <mapping class="com.alevel.module3.entities.Abonent"/>
-        <mapping class="com.alevel.module3.entities.Call__"/>-->
-
     </session-factory>
 </hibernate-configuration>
