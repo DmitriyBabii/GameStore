@@ -5,9 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 public class Storage {
+    private final String id = UUID.randomUUID().toString();
     @Setter(value = AccessLevel.NONE)
     private Product product;
     private int quantity;

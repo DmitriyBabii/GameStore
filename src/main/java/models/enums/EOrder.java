@@ -7,12 +7,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum EOrder {
     table_start("CREATE TABLE IF NOT EXISTS `gameshop`.`order` (\n"),
-    id_order("`id_order` INT NOT NULL AUTO_INCREMENT,\n"),
-    id_user_client_fk("`id_user_client_fk` INT,\n"),
-    id_user_manager_fk("`id_user_manager_fk` INT,\n"),
-    id_user_storekeeper_fk("`id_user_storekeeper_fk` INT,\n"),
-    id_user_courier_fk("`id_user_courier_fk` INT,\n"),
-    id_product_fk("`id_product_fk` INT,\n"),
+    id_order("`id_order` VARCHAR(36) NOT NULL,\n"),
+    id_user_client_fk("`id_user_client_fk` VARCHAR(36),\n"),
+    id_user_manager_fk("`id_user_manager_fk` VARCHAR(36),\n"),
+    id_user_storekeeper_fk("`id_user_storekeeper_fk` VARCHAR(36),\n"),
+    id_user_courier_fk("`id_user_courier_fk` VARCHAR(36),\n"),
+    id_product_fk("`id_product_fk` VARCHAR(36),\n"),
     price("`price` DOUBLE NOT NULL,\n"),
     start_date("`start_date` DATE NOT NULL,\n"),
     end_date_storekeeper("`end_date_storekeeper` DATE,\n"),
