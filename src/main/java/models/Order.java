@@ -1,7 +1,7 @@
 package models;
 
 import lombok.Value;
-import models.figures.Client;
+import models.figures.User;
 import models.figures.Courier;
 import models.figures.Manager;
 import models.figures.Storekeeper;
@@ -15,14 +15,14 @@ public class Order {
     Manager manager;
     Storekeeper storekeeper;
     Courier courier;
-    Client client;
+    User client;
     List<Product> product;
     int price;
     Date startOrder;
     Date endOrder;
 
     public Order(Manager manager, Storekeeper storekeeper, Courier courier,
-                 Client client, List<Product> product, int price) {
+                 User client, List<Product> product, int price) {
         this.manager = manager;
         this.storekeeper = storekeeper;
         this.courier = courier;

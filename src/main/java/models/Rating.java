@@ -2,14 +2,14 @@ package models;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import models.figures.AuthorizedClient;
+import models.figures.Client;
 
 import java.sql.Date;
 
 @Value
 @AllArgsConstructor
 public class Rating {
-    AuthorizedClient client;
+    Client client;
     Product product;
     Text review;
     Date reviewDate;
