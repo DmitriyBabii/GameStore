@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum EUser {
     table_start("CREATE TABLE IF NOT EXISTS `gameshop`.`user` (\n"),
-    id_user("`id_user` INT NOT NULL AUTO_INCREMENT,\n"),
+    id_user("`id_user` VARCHAR(36) NOT NULL,\n"),
     name("`name` VARCHAR(20) NOT NULL,\n"),
     last_name("`last_name` VARCHAR(20) NOT NULL,\n"),
     username("`username` VARCHAR(30) NOT NULL UNIQUE,\n"),

@@ -9,9 +9,11 @@ import models.figures.Storekeeper;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Value
 public class Order {
+    String id = UUID.randomUUID().toString();
     Manager manager;
     Storekeeper storekeeper;
     Courier courier;
