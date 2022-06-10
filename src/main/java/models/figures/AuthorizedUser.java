@@ -5,10 +5,11 @@ import lombok.*;
 import java.sql.Date;
 
 
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
-public abstract class AuthorizedUser extends Client{
+public abstract class AuthorizedUser extends User {
     private String name;
     private String lastName;
     private String username;

@@ -10,10 +10,7 @@ public class ServiceHibernate implements AutoCloseable {
 
     public ServiceHibernate() {
         open();
-        createAuthorizedClientTable();
-        createStorekeeperTable();
-        createCourierTable();
-        createManagerTable();
+        createAuthorizedUserTable();
         createProductTable();
         createStorageTable();
         createRatingTable();
@@ -31,34 +28,10 @@ public class ServiceHibernate implements AutoCloseable {
         session.close();
     }
 
-    private void createAuthorizedClientTable() {
+    private void createAuthorizedUserTable() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (EAuthClient client : EAuthClient.values()) {
+        for (EUser client : EUser.values()) {
             stringBuilder.append(client.getQuery());
-        }
-        session.createSQLQuery(stringBuilder.toString()).executeUpdate();
-    }
-
-    private void createStorekeeperTable() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (EStorekeeper storekeeper : EStorekeeper.values()) {
-            stringBuilder.append(storekeeper.getQuery());
-        }
-        session.createSQLQuery(stringBuilder.toString()).executeUpdate();
-    }
-
-    private void createCourierTable() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (ECourier courier : ECourier.values()) {
-            stringBuilder.append(courier.getQuery());
-        }
-        session.createSQLQuery(stringBuilder.toString()).executeUpdate();
-    }
-
-    private void createManagerTable() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (EManager manager : EManager.values()) {
-            stringBuilder.append(manager.getQuery());
         }
         session.createSQLQuery(stringBuilder.toString()).executeUpdate();
     }
