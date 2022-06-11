@@ -2,53 +2,42 @@ package services.entity;
 
 import intarfaces.Entity;
 import intarfaces.EntityService;
+import models.Order;
+import models.enums.EOrder;
+import org.hibernate.query.NativeQuery;
+import services.ServiceHibernate;
 
 public class OrderService implements EntityService {
 
     @Override
     public void save(Entity entity) {
-        /*try {
-            Manager manager = new Manager("a", "b", "c", "d",
-                    "f", "g", Date.valueOf(LocalDate.now()));
-            Storekeeper storekeeper = new Storekeeper("a", "b", "c", "d",
-                    "f", "g", Date.valueOf(LocalDate.now()));
-            Courier courier = new Courier("a", "b", "c", "d",
-                    "f", "g", Date.valueOf(LocalDate.now()));
-            Client client = new Client("a", "b", "c", "d",
-                    "f", "g", Date.valueOf(LocalDate.now()));
-            Text text = new Text("Some text");
-            Product product = new Product("a", Date.valueOf(LocalDate.now()), text, 18, 200);
-            Order order = new Order(manager, storekeeper, courier, client, product, 2000.2);
-            //Order order = (Order) entity;
+        try {
+            Order order = (Order) entity;
             StringBuilder sb = new StringBuilder("INSERT INTO gameshop.order ");
-            sb.append(
-                    Arrays.toString(EOrder.values())
-                            .replace("[", "(")
-                            .replace("]", ")")
-            );
-            sb.append(" VALUES(")
-                    .append(order.getId()).append(",")
-                    .append(order.getUser().getId()).append(",")
-                    .append(order.getManager().getId()).append(",")
-                    .append(order.getStorekeeper().getId()).append(",")
-                    .append(order.getCourier().getId()).append(",")
-                    .append(order.getProduct().getId()).append(",")
-                    .append(order.getPrice()).append(",")
-                    .append(order.getStartOrder()).append(",")
-                    .append(order.getEndDateStorekeeper()).append(",")
-                    .append(order.getEndDateCourier()).append(");");
-
-            ServiceHibernate.open();
-
-            Query query = ServiceHibernate.getSession().createSQLQuery(sb.toString());
-            //query.executeUpdate();
+            sb.append(getColumns())
+                    .append(" VALUES")
+                    .append(getParams())
+                    .append(";");
             System.out.println(sb);
 
+            ServiceHibernate.open();
+            NativeQuery query = ServiceHibernate.getSession().createSQLQuery(sb.toString());
+            query.setParameter(EOrder.id_order.toString(), order.getId());
+            query.setParameter(EOrder.id_user_manager_fk.toString(), order.getManager().getId());
+            query.setParameter(EOrder.id_user_storekeeper_fk.toString(), order.getStorekeeper().getId());
+            query.setParameter(EOrder.id_user_courier_fk.toString(), order.getCourier().getId());
+            query.setParameter(EOrder.id_user_client_fk.toString(), order.getClient().getId());
+            query.setParameter(EOrder.id_product_fk.toString(), order.getProduct().getId());
+            query.setParameter(EOrder.price.toString(), order.getPrice());
+            query.setParameter(EOrder.start_date.toString(), order.getStartOrder());
+            query.setParameter(EOrder.end_date_storekeeper.toString(), order.getEndDateStorekeeper());
+            query.setParameter(EOrder.end_date_courier.toString(), order.getEndDateCourier());
+            query.executeUpdate();
             ServiceHibernate.close();
 
         } catch (ClassCastException ex) {
             System.out.println(ex.getMessage());
-        }*/
+        }
     }
 
     @Override
@@ -63,11 +52,23 @@ public class OrderService implements EntityService {
 
     @Override
     public String getColumns() {
-        return null;
+        StringBuilder sb = new StringBuilder("(");
+        int count = 0;
+        for (EOrder p : EOrder.values()) {
+            sb.append(p)
+                    .append((++count < EOrder.values().length) ? "," : ")");
+        }
+        return sb.toString();
     }
 
     @Override
     public String getParams() {
-        return null;
+        StringBuilder sb = new StringBuilder("(");
+        int count = 0;
+        for (EOrder p : EOrder.values()) {
+            sb.append(":").append(p)
+                    .append((++count < EOrder.values().length) ? "," : ")");
+        }
+        return sb.toString();
     }
 }

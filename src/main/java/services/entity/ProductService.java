@@ -1,7 +1,5 @@
 package services.entity;
 
-import com.mysql.cj.NativeSession;
-import com.mysql.cj.Query;
 import intarfaces.Entity;
 import intarfaces.EntityService;
 import models.Product;
@@ -10,6 +8,9 @@ import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
 
 public class ProductService implements EntityService {
+
+
+
     @Override
     public void save(Entity entity) {
         try {

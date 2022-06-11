@@ -17,7 +17,7 @@ public enum EUser {
     email("`email` VARCHAR(35) NOT NULL UNIQUE,\n"),
     phone_number("`phone_number` VARCHAR(13) NOT NULL UNIQUE,\n"),
     date_of_birth("`date_of_birth` DATE NOT NULL,\n"),
-    character("`character` VARCHAR(15) NOT NULL,\n"
+    role("`role` VARCHAR(15),\n"
             + "PRIMARY KEY (`id_user`));");
 
     private final String query;

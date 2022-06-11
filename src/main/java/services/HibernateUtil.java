@@ -8,6 +8,10 @@ public class HibernateUtil {
     private static final SessionFactory sessionFactory
             = configureSessionFactory();
 
+    private HibernateUtil(){
+
+    }
+
     private static SessionFactory configureSessionFactory()
             throws HibernateException {
         Configuration configuration = new Configuration().configure();
