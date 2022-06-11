@@ -1,37 +1,48 @@
 package models;
 
-import lombok.Value;
-import models.figures.User;
-import models.figures.Courier;
-import models.figures.Manager;
-import models.figures.Storekeeper;
+import intarfaces.Entity;
+import lombok.Data;
+import models.figures.*;
 
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
-@Value
-public class Order {
-    String id = UUID.randomUUID().toString();
-    Manager manager;
-    Storekeeper storekeeper;
-    Courier courier;
-    User client;
-    List<Product> product;
-    int price;
-    Date startOrder;
-    Date endOrder;
+@Data
+public class Order implements Entity {
+    private final String id;
+    private final Manager manager;
+    private final Storekeeper storekeeper;
+    private final Courier courier;
+    private final Client client;
+    private final Product product;
+    private final Double price;
+    private final Date startOrder;
+    private Date endDateStorekeeper;
+    private Date endDateCourier;
 
-    public Order(Manager manager, Storekeeper storekeeper, Courier courier,
-                 User client, List<Product> product, int price) {
+    public Order(Manager manager, Storekeeper storekeeper, Courier courier, Client client, Product product, Double price, Date startOrder) {
+        this.id = UUID.randomUUID().toString();
         this.manager = manager;
         this.storekeeper = storekeeper;
         this.courier = courier;
-        this.product = product;
         this.client = client;
+        this.product = product;
         this.price = price;
-        this.startOrder = Date.valueOf(LocalDate.now());
-        this.endOrder = null;
+        this.startOrder = startOrder;
+        this.endDateStorekeeper = null;
+        this.endDateCourier = null;
+    }
+
+    public Order(String id, Manager manager, Storekeeper storekeeper, Courier courier, Client client, Product product, Double price, Date startOrder) {
+        this.id = id;
+        this.manager = manager;
+        this.storekeeper = storekeeper;
+        this.courier = courier;
+        this.client = client;
+        this.product = product;
+        this.price = price;
+        this.startOrder = startOrder;
+        this.endDateStorekeeper = null;
+        this.endDateCourier = null;
     }
 }

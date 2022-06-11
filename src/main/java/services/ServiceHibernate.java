@@ -6,40 +6,22 @@ import models.Text;
 import models.enums.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.id.GUIDGenerator;
 import org.hibernate.query.Query;
+import services.entity.OrderService;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
-public class ServiceHibernate implements AutoCloseable {
+public class ServiceHibernate {
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     private static Session session;
 
-    public ServiceHibernate() {
-        open();
-        createAuthorizedUserTable();
-        createProductTable();
-        createStorageTable();
-        createRatingTable();
-        createOrderTable();
-        initTables();
-        closeSession();
+    private ServiceHibernate() {
+
     }
 
-    private void open() {
-        session = sessionFactory.openSession();
-        session.beginTransaction();
-    }
-
-    private void closeSession() {
-        session.getTransaction().commit();
-        session.close();
-    }
-
-    private void createAuthorizedUserTable() {
+    private static void createAuthorizedUserTable() {
         StringBuilder stringBuilder = new StringBuilder();
         for (EUser client : EUser.values()) {
             stringBuilder.append(client.getQuery());
@@ -47,7 +29,7 @@ public class ServiceHibernate implements AutoCloseable {
         session.createSQLQuery(stringBuilder.toString()).executeUpdate();
     }
 
-    private void createProductTable() {
+    private static void createProductTable() {
         StringBuilder stringBuilder = new StringBuilder();
         for (EProduct product : EProduct.values()) {
             stringBuilder.append(product.getQuery());
@@ -55,7 +37,7 @@ public class ServiceHibernate implements AutoCloseable {
         session.createSQLQuery(stringBuilder.toString()).executeUpdate();
     }
 
-    private void createStorageTable() {
+    private static void createStorageTable() {
         StringBuilder stringBuilder = new StringBuilder();
         for (EStorage storage : EStorage.values()) {
             stringBuilder.append(storage.getQuery());
@@ -63,7 +45,7 @@ public class ServiceHibernate implements AutoCloseable {
         session.createSQLQuery(stringBuilder.toString()).executeUpdate();
     }
 
-    private void createRatingTable() {
+    private static void createRatingTable() {
         StringBuilder stringBuilder = new StringBuilder();
         for (ERating storage : ERating.values()) {
             stringBuilder.append(storage.getQuery());
@@ -71,7 +53,7 @@ public class ServiceHibernate implements AutoCloseable {
         session.createSQLQuery(stringBuilder.toString()).executeUpdate();
     }
 
-    private void createOrderTable() {
+    private static void createOrderTable() {
         StringBuilder stringBuilder = new StringBuilder();
         for (EOrder storage : EOrder.values()) {
             stringBuilder.append(storage.getQuery());
@@ -79,7 +61,7 @@ public class ServiceHibernate implements AutoCloseable {
         session.createSQLQuery(stringBuilder.toString()).executeUpdate();
     }
 
-    private void initTables() {
+    private static void initTables() {
         Text text = new Text(
                 "dadsasd"
         );
@@ -114,10 +96,33 @@ public class ServiceHibernate implements AutoCloseable {
                 System.out.println(o[i]);
             }
         }
+        OrderService orderService = new OrderService();
+        //orderService.save(product);
+        //Storage storage1 = (Storage) product;
     }
 
-    @Override
-    public void close() {
-        sessionFactory.close();
+    public static void start() {
+        open();
+        createAuthorizedUserTable();
+        createProductTable();
+        createStorageTable();
+        createRatingTable();
+        createOrderTable();
+        //initTables();
+        close();
+    }
+
+    public static void open() {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+    }
+
+    public static void close() {
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public static Session getSession() {
+        return session;
     }
 }
