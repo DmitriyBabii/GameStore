@@ -1,5 +1,6 @@
 package models;
 
+import intarfaces.Entity;
 import lombok.*;
 
 import java.sql.Date;
@@ -7,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-public class Product {
+public class Product implements Entity {
     private final String id = UUID.randomUUID().toString();
     private final String name;
     private final Date dateOfRelease;
