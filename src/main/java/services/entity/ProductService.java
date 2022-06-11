@@ -4,12 +4,22 @@ import intarfaces.Entity;
 import intarfaces.EntityService;
 import models.Product;
 import models.enums.EProduct;
+import models.enums.ERating;
 import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
 
 public class ProductService implements EntityService {
 
-
+    @Override
+    public void createTable() {
+        ServiceHibernate.open();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (EProduct product : EProduct.values()) {
+            stringBuilder.append(product.getQuery());
+        }
+        ServiceHibernate.getSession().createSQLQuery(stringBuilder.toString()).executeUpdate();
+        ServiceHibernate.close();
+    }
 
     @Override
     public void save(Entity entity) {
@@ -20,7 +30,6 @@ public class ProductService implements EntityService {
                     .append(" VALUES")
                     .append(getParams())
                     .append(";");
-            System.out.println(sb);
 
             ServiceHibernate.open();
             NativeQuery query = ServiceHibernate.getSession().createSQLQuery(sb.toString());

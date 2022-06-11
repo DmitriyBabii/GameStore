@@ -4,10 +4,22 @@ import intarfaces.Entity;
 import intarfaces.EntityService;
 import models.Storage;
 import models.enums.EStorage;
+import models.enums.EUser;
 import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
 
 public class StorageService implements EntityService {
+
+    @Override
+    public void createTable() {
+        ServiceHibernate.open();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (EStorage storage : EStorage.values()) {
+            stringBuilder.append(storage.getQuery());
+        }
+        ServiceHibernate.getSession().createSQLQuery(stringBuilder.toString()).executeUpdate();
+        ServiceHibernate.close();
+    }
 
     @Override
     public void save(Entity entity) {
@@ -18,7 +30,6 @@ public class StorageService implements EntityService {
                     .append(" VALUES")
                     .append(getParams())
                     .append(";");
-            System.out.println(sb);
 
             ServiceHibernate.open();
             NativeQuery query = ServiceHibernate.getSession().createSQLQuery(sb.toString());
