@@ -9,7 +9,7 @@
 
         <!-- Assume ИМЯ ВАШЕЙ БД is the database name -->
         <property name="hibernate.connection.url">
-            jdbc:mysql://localhost:3306/gameshop?serverTimezone=Europe/Moscow&amp;useSSL=false&amp;allowPublicKeyRetrieval=true
+            jdbc:mysql://localhost:3306/gameshop?serverTimezone=Europe/Kiev
         </property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">Babii0706</property>

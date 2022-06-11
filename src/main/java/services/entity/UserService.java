@@ -13,6 +13,18 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 public class UserService implements EntityService {
+
+    @Override
+    public void createTable() {
+        ServiceHibernate.open();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (EUser client : EUser.values()) {
+            stringBuilder.append(client.getQuery());
+        }
+        ServiceHibernate.getSession().createSQLQuery(stringBuilder.toString()).executeUpdate();
+        ServiceHibernate.close();
+    }
+
     @Override
     public void save(Entity entity) {
         try {
@@ -22,12 +34,9 @@ public class UserService implements EntityService {
                     .append(" VALUES")
                     .append(getParams())
                     .append(";");
-            System.out.println(sb);
 
             ServiceHibernate.open();
-            NativeQuery query = ServiceHibernate.getSession().createSQLQuery("INSERT INTO gameshop.user " +
-                    "(id_user,name,last_name,username,password,email,phone_number,date_of_birth,role) " +
-                    "VALUES(:id_user,:name,:last_name,:username,:password,:email,:phone_number,:date_of_birth,:role);");
+            NativeQuery query = ServiceHibernate.getSession().createSQLQuery(sb.toString());
             query.setParameter(EUser.id_user.toString(), user.getId());
             query.setParameter(EUser.name.toString(), user.getName());
             query.setParameter(EUser.last_name.toString(), user.getLastName());

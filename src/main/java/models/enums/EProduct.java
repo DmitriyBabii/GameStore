@@ -1,19 +1,29 @@
 package models.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum EProduct {
-    id_product("CREATE TABLE IF NOT EXISTS `gameshop`.`product` (\n"
-            + "`id_product` VARCHAR(36) NOT NULL,\n"),
-    name("`name` VARCHAR(30) NOT NULL,\n"),
-    date_of_release("`date_of_release` DATE NOT NULL,\n"),
-    destination("`destination` VARCHAR(255) NOT NULL,\n"),
-    age_limit("`age_limit` INT NOT NULL,\n"),
-    price("`price` DOUBLE NOT NULL,\n"
-            + "PRIMARY KEY (`id_product`));");
+    id_product("CREATE TABLE IF NOT EXISTS gameshop.product (\n"
+            + "id_product", MySQLType.ID, MySQLAttribute.NOT_NULL),
+    name("name", MySQLType.SHORT_STRING, MySQLAttribute.NOT_NULL),
+    date_of_release("date_of_release", MySQLType.DATE, MySQLAttribute.NOT_NULL),
+    destination("destination", MySQLType.LONG_STRING, MySQLAttribute.NOT_NULL),
+    age_limit("age_limit", MySQLType.INT, MySQLAttribute.NOT_NULL),
+    price("price" + MySQLType.DOUBLE + MySQLAttribute.NOT_NULL + ",\n"
+            + "PRIMARY KEY (id_product));");
 
     private final String query;
+
+    EProduct(String query) {
+        this.query = query;
+    }
+
+    EProduct(String query, MySQLType type, MySQLAttribute... attribute) {
+        StringBuilder str = new StringBuilder(query + type);
+        for (MySQLAttribute mySQLAttribute : attribute) {
+            str.append(mySQLAttribute);
+        }
+        this.query = str.append(",\n").toString();
+    }
 }
