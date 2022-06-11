@@ -17,8 +17,7 @@ public abstract class AuthorizedUser extends User {
     protected String password;
     protected String phoneNumber;
     protected String email;
-    @Setter(AccessLevel.NONE)
-    protected Date birthday;
+    protected final Date birthday;
 
     public AuthorizedUser(String name, String lastName, String username, String password, String phoneNumber, String email, Date birthday) {
         this.id = UUID.randomUUID().toString();

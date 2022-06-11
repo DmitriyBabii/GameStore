@@ -2,9 +2,7 @@ package services.entity;
 
 import intarfaces.Entity;
 import intarfaces.EntityService;
-import models.Product;
 import models.Storage;
-import models.enums.EProduct;
 import models.enums.EStorage;
 import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;

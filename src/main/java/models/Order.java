@@ -13,7 +13,7 @@ public class Order {
     Manager manager;
     Storekeeper storekeeper;
     Courier courier;
-    AuthorizedUser user;
+    Client client;
     Product product;
     double price;
     Date startOrder;
@@ -21,12 +21,12 @@ public class Order {
     Date endDateCourier;
 
     public Order(Manager manager, Storekeeper storekeeper, Courier courier,
-                 AuthorizedUser user, Product product, double price) {
+                 Client client, Product product, double price) {
         this.manager = manager;
         this.storekeeper = storekeeper;
         this.courier = courier;
         this.product = product;
-        this.user = user;
+        this.client = client;
         this.price = price;
         this.startOrder = Date.valueOf(LocalDate.now());
         this.endDateStorekeeper = null;
