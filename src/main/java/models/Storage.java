@@ -14,5 +14,5 @@ public class Storage implements Entity {
     private final String id = UUID.randomUUID().toString();
     @Setter(value = AccessLevel.NONE)
     private Product product;
-    private int quantity;
+    private Integer quantity;
 }
