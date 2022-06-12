@@ -11,12 +11,21 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 public class Product implements Entity {
-    private final String id = UUID.randomUUID().toString();
+    private final String id;
     private final String name;
     private final Date dateOfRelease;
     private Text description;
     private AgeLimit ageLimit;
     private Double price;
+
+    public Product(String name, Date dateOfRelease, Text description, AgeLimit ageLimit, Double price) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.dateOfRelease = dateOfRelease;
+        this.description = description;
+        this.ageLimit = ageLimit;
+        this.price = price;
+    }
 
     public String getDescription() {
         return description.toString();

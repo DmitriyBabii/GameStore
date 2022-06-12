@@ -1,13 +1,15 @@
 package models;
 
 import intarfaces.Entity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import models.figures.*;
 
 import java.sql.Date;
 import java.util.UUID;
 
-@Data
+@Setter
+@Getter
 public class Order implements Entity {
     private final String id;
     private final Manager manager;

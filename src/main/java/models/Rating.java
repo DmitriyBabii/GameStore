@@ -2,7 +2,6 @@ package models;
 
 import intarfaces.Entity;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import models.figures.Client;
 
@@ -10,7 +9,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 @Getter
-@EqualsAndHashCode
 @AllArgsConstructor
 public class Rating implements Entity {
     private final Client client;
@@ -27,3 +25,4 @@ public class Rating implements Entity {
         reviewDate = Date.valueOf(LocalDate.now());
     }
 }
+
