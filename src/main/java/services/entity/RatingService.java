@@ -1,15 +1,9 @@
 package services.entity;
 
 import intarfaces.Entity;
-import intarfaces.EntityRealize;
-import models.Product;
 import models.Rating;
-import models.enums.EProduct;
 import models.enums.ERating;
-import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
-
-import javax.management.Query;
 
 public final class RatingService extends EntityService {
 
@@ -30,10 +24,13 @@ public final class RatingService extends EntityService {
     public void save(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            NativeQuery query = ServiceHibernate
-                    .getSession()
-                    .createSQLQuery(getInsertQuery());
-            setAllParams(query, value).executeUpdate();
+            Rating rating = (Rating) value;
+            ServiceHibernate.getSession().createSQLQuery(getInsertQuery())
+                    .setParameter(ERating.id_user_fk.toString(), rating.getClient().getId())
+                    .setParameter(ERating.id_product_fk.toString(), rating.getProduct().getId())
+                    .setParameter(ERating.review.toString(), rating.getReview())
+                    .setParameter(ERating.review_date.toString(), rating.getReviewDate())
+                    .executeUpdate();
         }
         ServiceHibernate.close();
     }
@@ -42,17 +39,29 @@ public final class RatingService extends EntityService {
     public void update(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            NativeQuery query = ServiceHibernate
-                    .getSession()
-                    .createSQLQuery(getUpdateQuery());
-            setAllParams(query, value).executeUpdate();
+            Rating rating = (Rating) value;
+            ServiceHibernate.getSession().createSQLQuery(getUpdateQuery())
+                    .setParameter(ERating.id_user_fk.toString(), rating.getClient().getId())
+                    .setParameter(ERating.id_product_fk.toString(), rating.getProduct().getId())
+                    .setParameter(ERating.review.toString(), rating.getReview())
+                    .setParameter(ERating.review_date.toString(), rating.getReviewDate())
+                    .executeUpdate();
         }
         ServiceHibernate.close();
     }
 
     @Override
     public void delete(Entity... entity) {
-
+        ServiceHibernate.open();
+        for (Entity value : entity) {
+            Rating rating = (Rating) value;
+            ServiceHibernate.getSession()
+                    .createSQLQuery(getDeleteQuery())
+                    .setParameter(ERating.id_user_fk.toString(), rating.getClient().getId())
+                    .setParameter(ERating.id_product_fk.toString(), rating.getProduct().getId())
+                    .executeUpdate();
+        }
+        ServiceHibernate.close();
     }
 
     @Override
@@ -75,15 +84,6 @@ public final class RatingService extends EntityService {
                     .append((++count < ERating.values().length) ? "," : "");
         }
         return sb.toString();
-    }
-
-    @Override
-    protected NativeQuery setAllParams(NativeQuery query, Entity entity) {
-        Rating rating = (Rating) entity;
-        return query.setParameter(ERating.id_user_fk.toString(), rating.getClient().getId())
-                .setParameter(ERating.id_product_fk.toString(), rating.getProduct().getId())
-                .setParameter(ERating.review.toString(), rating.getReview())
-                .setParameter(ERating.review_date.toString(), rating.getReviewDate());
     }
 
     @Override
@@ -111,6 +111,18 @@ public final class RatingService extends EntityService {
                 .append(columns[0])
                 .append("=")
                 .append(params[0]);
+        return sb.toString();
+    }
+
+    @Override
+    protected String getDeleteQuery() {
+        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.rating ");
+
+        String[] columns = getColumns().split(",");
+        String[] params = getParams().split(",");
+
+        sb.append("WHERE ").append(columns[0]).append("=").append(params[0])
+                .append(" AND ").append(columns[1]).append("=").append(params[1]);
         return sb.toString();
     }
 }

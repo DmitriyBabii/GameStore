@@ -1,13 +1,9 @@
 package services.entity;
 
 import intarfaces.Entity;
-import intarfaces.EntityRealize;
 import models.Product;
 import models.enums.EProduct;
-import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
-
-import javax.management.Query;
 
 public final class ProductService extends EntityService {
 
@@ -24,15 +20,19 @@ public final class ProductService extends EntityService {
         ServiceHibernate.close();
     }
 
-
     @Override
     public void save(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            NativeQuery query = ServiceHibernate
-                    .getSession()
-                    .createSQLQuery(getInsertQuery());
-            setAllParams(query, value).executeUpdate();
+            Product product = (Product) value;
+            ServiceHibernate.getSession().createSQLQuery(getInsertQuery())
+                    .setParameter(EProduct.id_product.toString(), product.getId())
+                    .setParameter(EProduct.name.toString(), product.getName())
+                    .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
+                    .setParameter(EProduct.destination.toString(), product.getDescription())
+                    .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
+                    .setParameter(EProduct.price.toString(), product.getPrice())
+                    .executeUpdate();
         }
         ServiceHibernate.close();
     }
@@ -41,17 +41,29 @@ public final class ProductService extends EntityService {
     public void update(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            NativeQuery query = ServiceHibernate
-                    .getSession()
-                    .createSQLQuery(getUpdateQuery());
-            setAllParams(query, value).executeUpdate();
+            Product product = (Product) value;
+            ServiceHibernate.getSession().createSQLQuery(getUpdateQuery())
+                    .setParameter(EProduct.id_product.toString(), product.getId())
+                    .setParameter(EProduct.name.toString(), product.getName())
+                    .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
+                    .setParameter(EProduct.destination.toString(), product.getDescription())
+                    .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
+                    .setParameter(EProduct.price.toString(), product.getPrice())
+                    .executeUpdate();
         }
         ServiceHibernate.close();
     }
 
     @Override
     public void delete(Entity... entity) {
-
+        ServiceHibernate.open();
+        for (Entity value : entity) {
+            Product product = (Product) value;
+            ServiceHibernate.getSession().createSQLQuery(getDeleteQuery())
+                    .setParameter(EProduct.id_product.toString(), product.getId())
+                    .executeUpdate();
+        }
+        ServiceHibernate.close();
     }
 
     @Override
@@ -77,17 +89,6 @@ public final class ProductService extends EntityService {
     }
 
     @Override
-    protected NativeQuery setAllParams(NativeQuery query, Entity entity) {
-        Product product = (Product) entity;
-        return query.setParameter(EProduct.id_product.toString(), product.getId())
-                .setParameter(EProduct.name.toString(), product.getName())
-                .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
-                .setParameter(EProduct.destination.toString(), product.getDescription())
-                .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
-                .setParameter(EProduct.price.toString(), product.getPrice());
-    }
-
-    @Override
     protected String getInsertQuery() {
         return "INSERT INTO gameshop.product (" + getColumns() +
                 ") VALUES(" +
@@ -108,6 +109,20 @@ public final class ProductService extends EntityService {
                     .append(params[i])
                     .append((i < columns.length - 1) ? ", " : " ");
         }
+        sb.append("WHERE ")
+                .append(columns[0])
+                .append("=")
+                .append(params[0]);
+        return sb.toString();
+    }
+
+    @Override
+    protected String getDeleteQuery() {
+        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.product ");
+
+        String[] columns = getColumns().split(",");
+        String[] params = getParams().split(",");
+
         sb.append("WHERE ")
                 .append(columns[0])
                 .append("=")

@@ -1,15 +1,9 @@
 package services.entity;
 
 import intarfaces.Entity;
-import intarfaces.EntityRealize;
 import models.Order;
-import models.Product;
 import models.enums.EOrder;
-import models.enums.EProduct;
-import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
-
-import javax.management.Query;
 
 public final class OrderService extends EntityService {
 
@@ -30,10 +24,19 @@ public final class OrderService extends EntityService {
     public void save(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            NativeQuery query = ServiceHibernate
-                    .getSession()
-                    .createSQLQuery(getInsertQuery());
-            setAllParams(query, value).executeUpdate();
+            Order order = (Order) value;
+            ServiceHibernate.getSession().createSQLQuery(getInsertQuery())
+                    .setParameter(EOrder.id_order.toString(), order.getId())
+                    .setParameter(EOrder.id_user_manager_fk.toString(), order.getManager().getId())
+                    .setParameter(EOrder.id_user_storekeeper_fk.toString(), order.getStorekeeper().getId())
+                    .setParameter(EOrder.id_user_courier_fk.toString(), order.getCourier().getId())
+                    .setParameter(EOrder.id_user_client_fk.toString(), order.getClient().getId())
+                    .setParameter(EOrder.id_product_fk.toString(), order.getProduct().getId())
+                    .setParameter(EOrder.price.toString(), order.getPrice())
+                    .setParameter(EOrder.start_date.toString(), order.getStartOrder())
+                    .setParameter(EOrder.end_date_storekeeper.toString(), order.getEndDateStorekeeper())
+                    .setParameter(EOrder.end_date_courier.toString(), order.getEndDateCourier())
+                    .executeUpdate();
         }
         ServiceHibernate.close();
     }
@@ -42,17 +45,34 @@ public final class OrderService extends EntityService {
     public void update(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            NativeQuery query = ServiceHibernate
-                    .getSession()
-                    .createSQLQuery(getUpdateQuery());
-            setAllParams(query, value).executeUpdate();
+            Order order = (Order) value;
+            ServiceHibernate.getSession().createSQLQuery(getUpdateQuery())
+                    .setParameter(EOrder.id_order.toString(), order.getId())
+                    .setParameter(EOrder.id_user_manager_fk.toString(), order.getManager().getId())
+                    .setParameter(EOrder.id_user_storekeeper_fk.toString(), order.getStorekeeper().getId())
+                    .setParameter(EOrder.id_user_courier_fk.toString(), order.getCourier().getId())
+                    .setParameter(EOrder.id_user_client_fk.toString(), order.getClient().getId())
+                    .setParameter(EOrder.id_product_fk.toString(), order.getProduct().getId())
+                    .setParameter(EOrder.price.toString(), order.getPrice())
+                    .setParameter(EOrder.start_date.toString(), order.getStartOrder())
+                    .setParameter(EOrder.end_date_storekeeper.toString(), order.getEndDateStorekeeper())
+                    .setParameter(EOrder.end_date_courier.toString(), order.getEndDateCourier())
+                    .executeUpdate();
         }
         ServiceHibernate.close();
     }
 
     @Override
     public void delete(Entity... entity) {
-
+        ServiceHibernate.open();
+        for (Entity value : entity) {
+            Order order = (Order) value;
+            ServiceHibernate.getSession()
+                    .createSQLQuery(getDeleteQuery())
+                    .setParameter(EOrder.id_order.toString(), order.getId())
+                    .executeUpdate();
+        }
+        ServiceHibernate.close();
     }
 
     @Override
@@ -78,21 +98,6 @@ public final class OrderService extends EntityService {
     }
 
     @Override
-    protected NativeQuery setAllParams(NativeQuery query, Entity entity) {
-        Order order = (Order) entity;
-        return query.setParameter(EOrder.id_order.toString(), order.getId())
-                .setParameter(EOrder.id_user_manager_fk.toString(), order.getManager().getId())
-                .setParameter(EOrder.id_user_storekeeper_fk.toString(), order.getStorekeeper().getId())
-                .setParameter(EOrder.id_user_courier_fk.toString(), order.getCourier().getId())
-                .setParameter(EOrder.id_user_client_fk.toString(), order.getClient().getId())
-                .setParameter(EOrder.id_product_fk.toString(), order.getProduct().getId())
-                .setParameter(EOrder.price.toString(), order.getPrice())
-                .setParameter(EOrder.start_date.toString(), order.getStartOrder())
-                .setParameter(EOrder.end_date_storekeeper.toString(), order.getEndDateStorekeeper())
-                .setParameter(EOrder.end_date_courier.toString(), order.getEndDateCourier());
-    }
-
-    @Override
     protected String getInsertQuery() {
         return "INSERT INTO gameshop.order (" + getColumns() +
                 ") VALUES(" +
@@ -113,6 +118,20 @@ public final class OrderService extends EntityService {
                     .append(params[i])
                     .append((i < columns.length - 1) ? ", " : " ");
         }
+        sb.append("WHERE ")
+                .append(columns[0])
+                .append("=")
+                .append(params[0]);
+        return sb.toString();
+    }
+
+    @Override
+    protected String getDeleteQuery() {
+        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.order ");
+
+        String[] columns = getColumns().split(",");
+        String[] params = getParams().split(",");
+
         sb.append("WHERE ")
                 .append(columns[0])
                 .append("=")

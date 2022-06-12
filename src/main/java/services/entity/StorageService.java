@@ -1,15 +1,9 @@
 package services.entity;
 
 import intarfaces.Entity;
-import intarfaces.EntityRealize;
-import models.Product;
 import models.Storage;
-import models.enums.EProduct;
 import models.enums.EStorage;
-import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
-
-import javax.management.Query;
 
 public final class StorageService extends EntityService {
 
@@ -30,10 +24,12 @@ public final class StorageService extends EntityService {
     public void save(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            NativeQuery query = ServiceHibernate
-                    .getSession()
-                    .createSQLQuery(getInsertQuery());
-            setAllParams(query, value).executeUpdate();
+            Storage storage = (Storage) value;
+            ServiceHibernate.getSession().createSQLQuery(getInsertQuery())
+                    .setParameter(EStorage.id_storage.toString(), storage.getId())
+                    .setParameter(EStorage.id_product_fk.toString(), storage.getProduct().getId())
+                    .setParameter(EStorage.quantity.toString(), storage.getQuantity())
+                    .executeUpdate();
         }
         ServiceHibernate.close();
     }
@@ -42,17 +38,27 @@ public final class StorageService extends EntityService {
     public void update(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            NativeQuery query = ServiceHibernate
-                    .getSession()
-                    .createSQLQuery(getUpdateQuery());
-            setAllParams(query, value).executeUpdate();
+            Storage storage = (Storage) value;
+            ServiceHibernate.getSession().createSQLQuery(getUpdateQuery())
+                    .setParameter(EStorage.id_storage.toString(), storage.getId())
+                    .setParameter(EStorage.id_product_fk.toString(), storage.getProduct().getId())
+                    .setParameter(EStorage.quantity.toString(), storage.getQuantity())
+                    .executeUpdate();
         }
         ServiceHibernate.close();
     }
 
     @Override
     public void delete(Entity... entity) {
-
+        ServiceHibernate.open();
+        for (Entity value : entity) {
+            Storage storage = (Storage) value;
+            ServiceHibernate.getSession()
+                    .createSQLQuery(getDeleteQuery())
+                    .setParameter(EStorage.id_storage.toString(), storage.getId())
+                    .executeUpdate();
+        }
+        ServiceHibernate.close();
     }
 
     @Override
@@ -78,14 +84,6 @@ public final class StorageService extends EntityService {
     }
 
     @Override
-    protected NativeQuery setAllParams(NativeQuery query, Entity entity) {
-        Storage storage = (Storage) entity;
-        return query.setParameter(EStorage.id_storage.toString(), storage.getId())
-                .setParameter(EStorage.id_product_fk.toString(), storage.getProduct().getId())
-                .setParameter(EStorage.quantity.toString(), storage.getQuantity());
-    }
-
-    @Override
     protected String getInsertQuery() {
         return "INSERT INTO gameshop.storage (" + getColumns() +
                 ") VALUES(" +
@@ -106,6 +104,20 @@ public final class StorageService extends EntityService {
                     .append(params[i])
                     .append((i < columns.length - 1) ? ", " : " ");
         }
+        sb.append("WHERE ")
+                .append(columns[0])
+                .append("=")
+                .append(params[0]);
+        return sb.toString();
+    }
+
+    @Override
+    protected String getDeleteQuery() {
+        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.storage ");
+
+        String[] columns = getColumns().split(",");
+        String[] params = getParams().split(",");
+
         sb.append("WHERE ")
                 .append(columns[0])
                 .append("=")

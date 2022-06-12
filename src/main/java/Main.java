@@ -64,5 +64,11 @@ public class Main {
         userService.update(courier);
         ratingService.update(rating);
         orderService.update(order);
+
+        storageService.delete(storage);
+        orderService.delete(order);
+        ratingService.delete(rating);
+        productService.delete(product);
+        userService.delete(entities);
     }
 }
