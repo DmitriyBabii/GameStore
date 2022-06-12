@@ -1,3 +1,4 @@
+import intarfaces.Entity;
 import models.*;
 import models.enums.AgeLimit;
 import models.figures.Client;
@@ -28,6 +29,12 @@ public class Main {
         Order order = new Order(manager, storekeeper, courier, client,
                 product, 2200.0, Date.valueOf(LocalDate.now()));
 
+
+        Entity[] entities = {
+                client, manager, storekeeper, courier
+        };
+
+
         ProductService productService = new ProductService();
         StorageService storageService = new StorageService();
         UserService userService = new UserService();
@@ -36,10 +43,7 @@ public class Main {
 
         productService.save(product);
         storageService.save(storage);
-        userService.save(client);
-        userService.save(manager);
-        userService.save(storekeeper);
-        userService.save(courier);
+        userService.save(entities);
         ratingService.save(rating);
         orderService.save(order);
 

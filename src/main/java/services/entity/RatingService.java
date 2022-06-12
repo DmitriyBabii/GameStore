@@ -27,27 +27,31 @@ public final class RatingService extends EntityService {
     }
 
     @Override
-    public void save(Entity entity) {
+    public void save(Entity... entity) {
         ServiceHibernate.open();
-        NativeQuery query = ServiceHibernate
-                .getSession()
-                .createSQLQuery(getInsertQuery());
-        setAllParams(query, entity).executeUpdate();
+        for (Entity value : entity) {
+            NativeQuery query = ServiceHibernate
+                    .getSession()
+                    .createSQLQuery(getInsertQuery());
+            setAllParams(query, value).executeUpdate();
+        }
         ServiceHibernate.close();
     }
 
     @Override
-    public void update(Entity entity) {
+    public void update(Entity... entity) {
         ServiceHibernate.open();
-        NativeQuery query = ServiceHibernate
-                .getSession()
-                .createSQLQuery(getUpdateQuery());
-        setAllParams(query, entity).executeUpdate();
+        for (Entity value : entity) {
+            NativeQuery query = ServiceHibernate
+                    .getSession()
+                    .createSQLQuery(getUpdateQuery());
+            setAllParams(query, value).executeUpdate();
+        }
         ServiceHibernate.close();
     }
 
     @Override
-    public void delete(Entity entity) {
+    public void delete(Entity... entity) {
 
     }
 
