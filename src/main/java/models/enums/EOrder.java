@@ -16,7 +16,6 @@ public enum EOrder {
     price("price", MySQLType.DOUBLE, MySQLAttribute.NOT_NULL),
     start_date("start_date", MySQLType.DATE, MySQLAttribute.NOT_NULL),
     end_date_storekeeper("end_date_storekeeper", MySQLType.DATE),
-
     end_date_courier("end_date_courier " + MySQLType.DATE + ",\n"
             + "FOREIGN KEY (id_user_client_fk) REFERENCES user (id_user),\n"
             + "FOREIGN KEY (id_user_manager_fk) REFERENCES user (id_user),\n"

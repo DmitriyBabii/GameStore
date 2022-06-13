@@ -8,8 +8,8 @@ import java.sql.Date;
 import java.util.UUID;
 
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Setter
+@Getter
 public abstract class AuthorizedUser extends User implements Entity {
     protected final String id;
     protected String name;

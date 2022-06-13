@@ -9,6 +9,7 @@ public enum MySQLType {
     DOUBLE(" DOUBLE"),
     DATE(" DATE"),
     SHORT_STRING(" VARCHAR(30)"),
+    MIDDLE_STRING(" VARCHAR(100)"),
     LONG_STRING(" VARCHAR(255)"),
     PHONE_NUMBER(" VARCHAR(13)");
 

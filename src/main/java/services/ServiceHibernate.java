@@ -1,6 +1,6 @@
 package services;
 
-import intarfaces.EntityService;
+import intarfaces.EntityRealize;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import services.entity.*;
@@ -24,14 +24,14 @@ public class ServiceHibernate {
     }
 
     public static void start() {
-        EntityService[] services = {
+        EntityRealize[] services = {
                 new UserService(),
                 new ProductService(),
                 new StorageService(),
                 new RatingService(),
                 new OrderService()
         };
-        for (EntityService service : services) {
+        for (EntityRealize service : services) {
             service.createTable();
         }
     }
