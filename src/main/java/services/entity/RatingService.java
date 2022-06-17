@@ -1,9 +1,19 @@
 package services.entity;
 
 import intarfaces.Entity;
+import models.Criterion;
 import models.Rating;
+import models.enums.EProduct;
 import models.enums.ERating;
+import models.enums.EUser;
+import models.figures.Client;
+import org.hibernate.query.NativeQuery;
+import services.CriterionService;
 import services.ServiceHibernate;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class RatingService extends EntityService {
 
@@ -62,6 +72,18 @@ public final class RatingService extends EntityService {
                     .executeUpdate();
         }
         ServiceHibernate.close();
+    }
+
+    public List<Rating> select(List<Criterion> criterionList) {
+        ServiceHibernate.open();
+        NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
+        for (Criterion criterion : criterionList) {
+            query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+        }
+        List<Object[]> resultList = query.list();
+        ServiceHibernate.close();
+
+        return getRatings(resultList);
     }
 
     @Override
@@ -124,5 +146,38 @@ public final class RatingService extends EntityService {
         sb.append("WHERE ").append(columns[0]).append("=").append(params[0])
                 .append(" AND ").append(columns[1]).append("=").append(params[1]);
         return sb.toString();
+    }
+
+    protected String getSelectQuery(List<Criterion> criterionList) {
+        StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.rating WHERE ");
+        for (int i = 0; i < criterionList.size(); i++) {
+            sb.append(criterionList.get(i).getParameter())
+                    .append("=:")
+                    .append(criterionList.get(i).getParameter())
+                    .append((i + 1) < criterionList.size() ? " AND " : "");
+        }
+        return sb.toString();
+    }
+
+    protected List<Rating> getRatings(List<Object[]> resultList) {
+        UserService us = new UserService();
+        ProductService ps = new ProductService();
+        CriterionService cProduct = new CriterionService();
+        CriterionService cUser = new CriterionService();
+
+        List<Rating> productList = new ArrayList<>();
+        for (Object[] o : resultList) {
+            cUser.addCriterion(EUser.id_user, (String) o[0]);
+            cProduct.addCriterion(EProduct.id_product, (String) o[1]);
+            productList.add(
+                    Rating.builder()
+                            .client((Client) us.select(cUser.getCriterionList()).get(0))
+                            .product(ps.select(cProduct.getCriterionList()).get(0))
+                            .review((String) o[2])
+                            .reviewDate((Date) o[3])
+                            .build()
+            );
+        }
+        return productList;
     }
 }

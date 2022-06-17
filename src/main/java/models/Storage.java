@@ -8,6 +8,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @AllArgsConstructor
+@Builder
 public class Storage implements Entity {
     private final String id;
     private final Product product;
@@ -17,5 +18,14 @@ public class Storage implements Entity {
         this.id = UUID.randomUUID().toString();
         this.product = product;
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Storage{" +
+                "id='" + id + '\'' +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                '}';
     }
 }

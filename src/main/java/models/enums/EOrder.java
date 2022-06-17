@@ -1,10 +1,11 @@
 package models.enums;
 
+import intarfaces.EntityEnum;
 import lombok.Getter;
 
 
 @Getter
-public enum EOrder {
+public enum EOrder implements EntityEnum {
 
     id_order("CREATE TABLE IF NOT EXISTS gameshop.order (\n"
             + "id_order", MySQLType.ID, MySQLAttribute.NOT_NULL),
@@ -22,7 +23,7 @@ public enum EOrder {
             + "FOREIGN KEY (id_user_storekeeper_fk) REFERENCES user (id_user),\n"
             + "FOREIGN KEY (id_user_courier_fk) REFERENCES user (id_user),\n"
             + "FOREIGN KEY (id_product_fk) REFERENCES product (id_product),\n"
-            + "PRIMARY KEY (`id_order`));"
+            + "PRIMARY KEY (id_order));"
     );
 
     private final String query;

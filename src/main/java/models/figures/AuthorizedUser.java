@@ -11,16 +11,22 @@ import java.util.UUID;
 @Setter
 @Getter
 public abstract class AuthorizedUser extends User implements Entity {
-    protected final String id;
+    @Setter(AccessLevel.NONE)
+    protected String id;
     protected String name;
     protected String lastName;
     protected String username;
     protected String password;
     protected String phoneNumber;
     protected String email;
-    protected final Date birthday;
+    @Setter(AccessLevel.NONE)
+    protected Date birthday;
     @Setter(AccessLevel.NONE)
     protected Role role;
+
+    protected AuthorizedUser(){
+
+    }
 
     public AuthorizedUser(String name, String lastName, String username, String password,
                           String phoneNumber, String email, Date birthday) {
@@ -48,5 +54,20 @@ public abstract class AuthorizedUser extends User implements Entity {
 
     public String getRole() {
         return role.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "AuthorizedUser{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", birthday=" + birthday +
+                ", role=" + role +
+                '}';
     }
 }

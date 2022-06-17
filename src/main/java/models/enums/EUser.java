@@ -1,10 +1,11 @@
 package models.enums;
 
+import intarfaces.EntityEnum;
 import lombok.Getter;
 
 
 @Getter
-public enum EUser {
+public enum EUser implements EntityEnum {
     id_user("CREATE TABLE IF NOT EXISTS gameshop.user (\n"
             + "id_user", MySQLType.ID, MySQLAttribute.NOT_NULL),
     name("name", MySQLType.SHORT_STRING, MySQLAttribute.NOT_NULL),

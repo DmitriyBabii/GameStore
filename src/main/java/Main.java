@@ -1,10 +1,11 @@
 import intarfaces.Entity;
 import models.*;
-import models.enums.AgeLimit;
+import models.enums.*;
 import models.figures.Client;
 import models.figures.Courier;
 import models.figures.Manager;
 import models.figures.Storekeeper;
+import services.CriterionService;
 import services.ServiceHibernate;
 import services.entity.*;
 
@@ -15,11 +16,12 @@ public class Main {
     public static void main(String[] args) {
         ServiceHibernate.start();
         Text text = new Text("dadsasd");
-        Product product = new Product("Witcher 3", Date.valueOf(LocalDate.now()), text, AgeLimit._18, 5000.0);
+        Product product = new Product("Witcher 3", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 5000.0);
+        Product product1 = new Product("Witcher 2", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 1.1);
         Storage storage = new Storage(product, 10);
         Client client = new Client("Dima", "Babii", "Mitar", "Babii0706",
                 "+380504021867", "v.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
-        Rating rating = new Rating(client, product, text, Date.valueOf(LocalDate.now()));
+        Rating rating = new Rating(client, product, "dadsasd", Date.valueOf(LocalDate.now()));
         Manager manager = new Manager("Manager", "Babii", "Mitar1", "Babii0706",
                 "+380504121867", "1.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
         Storekeeper storekeeper = new Storekeeper("Storekeeper", "Babii", "Mitar2", "Babii0706",
@@ -41,11 +43,11 @@ public class Main {
         RatingService ratingService = new RatingService();
         OrderService orderService = new OrderService();
 
-        productService.save(product);
+        /*productService.save(product, product1);
         storageService.save(storage);
         userService.save(entities);
         ratingService.save(rating);
-        orderService.save(order);
+        orderService.save(order);*/
 
         product.setPrice(1.1);
         storage.setQuantity(1);
@@ -53,7 +55,7 @@ public class Main {
         manager.setName("1");
         storekeeper.setName("1");
         courier.setName("1");
-        rating.setReview(new Text("1"));
+        rating.setReview("1");
         order.setEndDateStorekeeper(Date.valueOf(LocalDate.now()));
 
         productService.update(product);
@@ -65,10 +67,28 @@ public class Main {
         ratingService.update(rating);
         orderService.update(order);
 
-        storageService.delete(storage);
+
+        CriterionService criterionProduct = new CriterionService();
+        criterionProduct.addCriterion(EProduct.name, "Witcher 3");
+        criterionProduct.addCriterion(EProduct.price, 1.1);
+        System.out.println(productService.select(criterionProduct.getCriterionList()));
+
+        CriterionService criterionStorage = new CriterionService();
+        criterionStorage.addCriterion(EStorage.quantity, 1);
+        System.out.println(storageService.select(criterionStorage.getCriterionList()));
+
+        CriterionService criterionUser = new CriterionService();
+        criterionUser.addCriterion(EUser.last_name, "Babii");
+        System.out.println(userService.select(criterionUser.getCriterionList()));
+
+        CriterionService criterionRating = new CriterionService();
+        criterionRating.addCriterion(ERating.review, "1");
+        System.out.println(ratingService.select(criterionRating.getCriterionList()));
+
+        /*storageService.delete(storage);
         orderService.delete(order);
         ratingService.delete(rating);
         productService.delete(product);
-        userService.delete(entities);
+        userService.delete(entities);*/
     }
 }

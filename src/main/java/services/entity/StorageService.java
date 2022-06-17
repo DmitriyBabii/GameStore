@@ -1,9 +1,19 @@
 package services.entity;
 
 import intarfaces.Entity;
+import models.Criterion;
+import models.Product;
 import models.Storage;
+import models.enums.EProduct;
 import models.enums.EStorage;
+import org.hibernate.query.NativeQuery;
+import services.CriterionService;
+import services.ParseAgeLimit;
 import services.ServiceHibernate;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class StorageService extends EntityService {
 
@@ -59,6 +69,18 @@ public final class StorageService extends EntityService {
                     .executeUpdate();
         }
         ServiceHibernate.close();
+    }
+
+    public List<Storage> select(List<Criterion> criterionList) {
+        ServiceHibernate.open();
+        NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
+        for (Criterion criterion : criterionList) {
+            query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+        }
+        List<Object[]> resultList = query.list();
+        ServiceHibernate.close();
+
+        return getStorages(resultList);
     }
 
     @Override
@@ -123,5 +145,33 @@ public final class StorageService extends EntityService {
                 .append("=")
                 .append(params[0]);
         return sb.toString();
+    }
+
+    protected String getSelectQuery(List<Criterion> criterionList) {
+        StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.storage WHERE ");
+        for (int i = 0; i < criterionList.size(); i++) {
+            sb.append(criterionList.get(i).getParameter())
+                    .append("=:")
+                    .append(criterionList.get(i).getParameter())
+                    .append((i + 1) < criterionList.size() ? " AND " : "");
+        }
+        return sb.toString();
+    }
+
+    protected List<Storage> getStorages(List<Object[]> resultList) {
+        ProductService ps = new ProductService();
+        CriterionService cs = new CriterionService();
+        List<Storage> productList = new ArrayList<>();
+        for (Object[] o : resultList) {
+            cs.addCriterion(EProduct.id_product, (String) o[1]);
+            productList.add(
+                    Storage.builder()
+                            .id((String) o[0])
+                            .product(ps.select(cs.getCriterionList()).get(0))
+                            .quantity((Integer) o[2])
+                            .build()
+            );
+        }
+        return productList;
     }
 }
