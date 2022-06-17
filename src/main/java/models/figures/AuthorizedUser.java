@@ -24,10 +24,6 @@ public abstract class AuthorizedUser extends User implements Entity {
     @Setter(AccessLevel.NONE)
     protected Role role;
 
-    protected AuthorizedUser(){
-
-    }
-
     public AuthorizedUser(String name, String lastName, String username, String password,
                           String phoneNumber, String email, Date birthday) {
         this.id = UUID.randomUUID().toString();

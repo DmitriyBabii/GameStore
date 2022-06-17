@@ -13,7 +13,7 @@ public enum EOrder implements EntityEnum {
     id_user_manager_fk("id_user_manager_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
     id_user_storekeeper_fk("id_user_storekeeper_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
     id_user_courier_fk("id_user_courier_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
-    id_product_fk("id_product_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
+    //id_product_fk("id_product_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
     price("price", MySQLType.DOUBLE, MySQLAttribute.NOT_NULL),
     start_date("start_date", MySQLType.DATE, MySQLAttribute.NOT_NULL),
     end_date_storekeeper("end_date_storekeeper", MySQLType.DATE),
@@ -22,7 +22,7 @@ public enum EOrder implements EntityEnum {
             + "FOREIGN KEY (id_user_manager_fk) REFERENCES user (id_user),\n"
             + "FOREIGN KEY (id_user_storekeeper_fk) REFERENCES user (id_user),\n"
             + "FOREIGN KEY (id_user_courier_fk) REFERENCES user (id_user),\n"
-            + "FOREIGN KEY (id_product_fk) REFERENCES product (id_product),\n"
+            //+ "FOREIGN KEY (id_product_fk) REFERENCES product (id_product),\n"
             + "PRIMARY KEY (id_order));"
     );
 

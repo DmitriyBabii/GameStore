@@ -11,6 +11,8 @@ import services.entity.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,6 +20,7 @@ public class Main {
         Text text = new Text("dadsasd");
         Product product = new Product("Witcher 3", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 5000.0);
         Product product1 = new Product("Witcher 2", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 1.1);
+        Product product2 = new Product("Witcher 1", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 2.2);
         Storage storage = new Storage(product, 10);
         Client client = new Client("Dima", "Babii", "Mitar", "Babii0706",
                 "+380504021867", "v.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
@@ -28,8 +31,12 @@ public class Main {
                 "+380504221867", "2.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
         Courier courier = new Courier("Courier", "Babii", "Mitar3", "Babii0706",
                 "+380504321867", "3.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
+
+        List<Product> productList = new ArrayList<>();
+        productList.add(product);
+        productList.add(product1);
         Order order = new Order(manager, storekeeper, courier, client,
-                product, 2200.0, Date.valueOf(LocalDate.now()));
+                productList, 2200.0, Date.valueOf(LocalDate.now()));
 
 
         Entity[] entities = {
@@ -43,11 +50,11 @@ public class Main {
         RatingService ratingService = new RatingService();
         OrderService orderService = new OrderService();
 
-        /*productService.save(product, product1);
+        productService.save(product, product1);
         storageService.save(storage);
         userService.save(entities);
         ratingService.save(rating);
-        orderService.save(order);*/
+        orderService.save(order);
 
         product.setPrice(1.1);
         storage.setQuantity(1);
@@ -57,6 +64,7 @@ public class Main {
         courier.setName("1");
         rating.setReview("1");
         order.setEndDateStorekeeper(Date.valueOf(LocalDate.now()));
+        order.addProduct(product2);
 
         productService.update(product);
         storageService.update(storage);
@@ -84,6 +92,10 @@ public class Main {
         CriterionService criterionRating = new CriterionService();
         criterionRating.addCriterion(ERating.review, "1");
         System.out.println(ratingService.select(criterionRating.getCriterionList()));
+
+        CriterionService criterionOrder = new CriterionService();
+        criterionOrder.addCriterion(EOrder.price, 2200);
+        System.out.println(orderService.select(criterionOrder.getCriterionList()));
 
         /*storageService.delete(storage);
         orderService.delete(order);

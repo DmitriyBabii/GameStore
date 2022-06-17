@@ -5,10 +5,6 @@ import models.enums.Role;
 import java.sql.Date;
 
 public class Client extends AuthorizedUser {
-    private Client(){
-
-    }
-
     public Client(String name, String lastName, String username,
                   String password, String phoneNumber, String email, Date birthday) {
         super(name, lastName, username, password, phoneNumber, email, birthday);
