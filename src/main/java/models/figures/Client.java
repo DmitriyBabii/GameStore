@@ -1,10 +1,8 @@
 package models.figures;
 
-
 import models.enums.Role;
 
 import java.sql.Date;
-
 
 public class Client extends AuthorizedUser {
     public Client(String name, String lastName, String username,

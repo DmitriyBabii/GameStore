@@ -1,10 +1,11 @@
 package models.enums;
 
+import intarfaces.EntityEnum;
 import lombok.Getter;
 
 @Getter
-public enum EProduct {
-    id_product("CREATE TABLE IF NOT EXISTS gameshop.product (\n"
+public enum EProduct implements EntityEnum {
+    id_product("CREATE TABLE IF NOT EXISTS game_shop.product (\n"
             + "id_product", MySQLType.ID, MySQLAttribute.NOT_NULL),
     name("name", MySQLType.MIDDLE_STRING, MySQLAttribute.NOT_NULL, MySQLAttribute.UNIQUE),
     date_of_release("date_of_release", MySQLType.DATE, MySQLAttribute.NOT_NULL),

@@ -1,5 +1,9 @@
 package intarfaces;
 
+import models.Criterion;
+
+import java.util.List;
+
 public interface EntityRealize {
     void createTable();
 
@@ -8,4 +12,6 @@ public interface EntityRealize {
     void update(Entity... entity);
 
     void delete(Entity... entity);
+
+    List<? extends Entity> select(List<Criterion> criterionList);
 }

@@ -10,15 +10,16 @@ import java.util.UUID;
 @Setter
 @Getter
 @AllArgsConstructor
+@Builder
 public class Product implements Entity {
     private final String id;
     private final String name;
     private final Date dateOfRelease;
-    private Text description;
+    private String description;
     private AgeLimit ageLimit;
     private Double price;
 
-    public Product(String name, Date dateOfRelease, Text description, AgeLimit ageLimit, Double price) {
+    public Product(String name, Date dateOfRelease, String description, AgeLimit ageLimit, Double price) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.dateOfRelease = dateOfRelease;
@@ -27,11 +28,19 @@ public class Product implements Entity {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description.toString();
-    }
-
     public Integer getAgeLimit() {
         return ageLimit.getValue();
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", dateOfRelease=" + dateOfRelease +
+                ", description='" + description + '\'' +
+                ", ageLimit=" + ageLimit.getValue() +
+                ", price=" + price +
+                '}';
     }
 }

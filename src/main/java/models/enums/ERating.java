@@ -1,11 +1,12 @@
 package models.enums;
 
+import intarfaces.EntityEnum;
 import lombok.Getter;
 
 
 @Getter
-public enum ERating {
-    id_user_fk("CREATE TABLE IF NOT EXISTS gameshop.rating (\n"
+public enum ERating implements EntityEnum {
+    id_user_fk("CREATE TABLE IF NOT EXISTS game_shop.rating (\n"
             + "id_user_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
     id_product_fk("id_product_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
     review("review", MySQLType.LONG_STRING, MySQLAttribute.NOT_NULL),

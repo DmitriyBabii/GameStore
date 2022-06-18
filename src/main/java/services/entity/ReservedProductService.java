@@ -2,24 +2,24 @@ package services.entity;
 
 import intarfaces.Entity;
 import models.Criterion;
-import models.Product;
+import models.ReservedProduct;
 import models.enums.EProduct;
+import models.enums.EReservedProduct;
 import org.hibernate.query.NativeQuery;
-import services.ParseAgeLimit;
+import services.CriterionService;
 import services.ServiceHibernate;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ProductService extends EntityService {
+public class ReservedProductService extends EntityService {
 
     @Override
     public void createTable() {
         ServiceHibernate.open();
         StringBuilder stringBuilder = new StringBuilder();
-        for (EProduct product : EProduct.values()) {
-            stringBuilder.append(product.getQuery());
+        for (EReservedProduct ReservedProduct : EReservedProduct.values()) {
+            stringBuilder.append(ReservedProduct.getQuery());
         }
         ServiceHibernate.getSession()
                 .createSQLQuery(stringBuilder.toString())
@@ -31,14 +31,10 @@ public final class ProductService extends EntityService {
     public void save(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            Product product = (Product) value;
+            ReservedProduct reservedProduct = (ReservedProduct) value;
             ServiceHibernate.getSession().createSQLQuery(getInsertQuery())
-                    .setParameter(EProduct.id_product.toString(), product.getId())
-                    .setParameter(EProduct.name.toString(), product.getName())
-                    .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
-                    .setParameter(EProduct.destination.toString(), product.getDescription())
-                    .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
-                    .setParameter(EProduct.price.toString(), product.getPrice())
+                    .setParameter(EReservedProduct.id_product_fk.toString(), reservedProduct.getProduct().getId())
+                    .setParameter(EReservedProduct.quantity.toString(), reservedProduct.getQuantity())
                     .executeUpdate();
         }
         ServiceHibernate.close();
@@ -48,14 +44,10 @@ public final class ProductService extends EntityService {
     public void update(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            Product product = (Product) value;
+            ReservedProduct reservedProduct = (ReservedProduct) value;
             ServiceHibernate.getSession().createSQLQuery(getUpdateQuery())
-                    .setParameter(EProduct.id_product.toString(), product.getId())
-                    .setParameter(EProduct.name.toString(), product.getName())
-                    .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
-                    .setParameter(EProduct.destination.toString(), product.getDescription())
-                    .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
-                    .setParameter(EProduct.price.toString(), product.getPrice())
+                    .setParameter(EReservedProduct.id_product_fk.toString(), reservedProduct.getProduct().getId())
+                    .setParameter(EReservedProduct.quantity.toString(), reservedProduct.getQuantity())
                     .executeUpdate();
         }
         ServiceHibernate.close();
@@ -65,16 +57,17 @@ public final class ProductService extends EntityService {
     public void delete(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            Product product = (Product) value;
-            ServiceHibernate.getSession().createSQLQuery(getDeleteQuery())
-                    .setParameter(EProduct.id_product.toString(), product.getId())
+            ReservedProduct reservedProduct = (ReservedProduct) value;
+            ServiceHibernate.getSession()
+                    .createSQLQuery(getDeleteQuery())
+                    .setParameter(EReservedProduct.id_product_fk.toString(), reservedProduct.getProduct().getId())
                     .executeUpdate();
         }
         ServiceHibernate.close();
     }
 
     @Override
-    public List<Product> select(List<Criterion> criterionList) {
+    public List<ReservedProduct> select(List<Criterion> criterionList) {
         ServiceHibernate.open();
         @SuppressWarnings("rawtypes")
         NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
@@ -94,9 +87,9 @@ public final class ProductService extends EntityService {
     protected String getColumns() {
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        for (EProduct p : EProduct.values()) {
-            sb.append(p)
-                    .append((++count < EProduct.values().length) ? "," : "");
+        for (EReservedProduct s : EReservedProduct.values()) {
+            sb.append(s)
+                    .append((++count < EReservedProduct.values().length) ? "," : "");
         }
         return sb.toString();
     }
@@ -105,16 +98,16 @@ public final class ProductService extends EntityService {
     protected String getParams() {
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        for (EProduct p : EProduct.values()) {
-            sb.append(":").append(p)
-                    .append((++count < EProduct.values().length) ? "," : "");
+        for (EReservedProduct s : EReservedProduct.values()) {
+            sb.append(":").append(s)
+                    .append((++count < EReservedProduct.values().length) ? "," : "");
         }
         return sb.toString();
     }
 
     @Override
     protected String getInsertQuery() {
-        return "INSERT INTO game_shop.product (" + getColumns() +
+        return "INSERT INTO game_shop.reserved_product (" + getColumns() +
                 ") VALUES(" +
                 getParams() +
                 ")";
@@ -122,7 +115,7 @@ public final class ProductService extends EntityService {
 
     @Override
     protected String getUpdateQuery() {
-        StringBuilder sb = new StringBuilder("UPDATE game_shop.product SET ");
+        StringBuilder sb = new StringBuilder("UPDATE game_shop.reserved_product SET ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -134,29 +127,29 @@ public final class ProductService extends EntityService {
                     .append((i < columns.length - 1) ? ", " : " ");
         }
         sb.append("WHERE ")
-                .append(columns[EProduct.id_product.ordinal()])
+                .append(columns[EReservedProduct.id_product_fk.ordinal()])
                 .append("=")
-                .append(params[EProduct.id_product.ordinal()]);
+                .append(params[EReservedProduct.id_product_fk.ordinal()]);
         return sb.toString();
     }
 
     @Override
     protected String getDeleteQuery() {
-        StringBuilder sb = new StringBuilder("DELETE FROM game_shop.product ");
+        StringBuilder sb = new StringBuilder("DELETE FROM game_shop.reserved_product ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
 
         sb.append("WHERE ")
-                .append(columns[EProduct.id_product.ordinal()])
+                .append(columns[EReservedProduct.id_product_fk.ordinal()])
                 .append("=")
-                .append(params[EProduct.id_product.ordinal()]);
+                .append(params[EReservedProduct.id_product_fk.ordinal()]);
         return sb.toString();
     }
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.product WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.reserved_product WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
             Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())
@@ -168,17 +161,16 @@ public final class ProductService extends EntityService {
     }
 
     @Override
-    protected List<Product> getEntities(List<Object[]> resultList) {
-        List<Product> productList = new ArrayList<>();
+    protected List<ReservedProduct> getEntities(List<Object[]> resultList) {
+        ProductService ps = new ProductService();
+        CriterionService cs = new CriterionService();
+        List<ReservedProduct> productList = new ArrayList<>();
         for (Object[] o : resultList) {
+            cs.addCriterion(EProduct.id_product, o[EReservedProduct.id_product_fk.ordinal()]);
             productList.add(
-                    Product.builder()
-                            .id((String) o[EProduct.id_product.ordinal()])
-                            .name((String) o[EProduct.name.ordinal()])
-                            .dateOfRelease((Date) o[EProduct.date_of_release.ordinal()])
-                            .description((String) o[EProduct.destination.ordinal()])
-                            .ageLimit(ParseAgeLimit.getAgeLimit((Integer) o[EProduct.age_limit.ordinal()]))
-                            .price((Double) o[EProduct.price.ordinal()])
+                    ReservedProduct.builder()
+                            .product(ps.select(cs.getCriterionList()).get(0))
+                            .quantity((Integer) o[EReservedProduct.quantity.ordinal()])
                             .build()
             );
         }
