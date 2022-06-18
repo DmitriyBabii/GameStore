@@ -3,7 +3,6 @@ package services.entity;
 import intarfaces.Entity;
 import models.Criterion;
 import models.Product;
-import models.enums.AgeLimit;
 import models.enums.EProduct;
 import org.hibernate.query.NativeQuery;
 import services.ParseAgeLimit;
@@ -12,7 +11,6 @@ import services.ServiceHibernate;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntBinaryOperator;
 
 public final class ProductService extends EntityService {
 
@@ -75,16 +73,21 @@ public final class ProductService extends EntityService {
         ServiceHibernate.close();
     }
 
+    @Override
     public List<Product> select(List<Criterion> criterionList) {
         ServiceHibernate.open();
+        @SuppressWarnings("rawtypes")
         NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
         for (Criterion criterion : criterionList) {
-            query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            if (criterion.getValue() != null) {
+                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            }
         }
+        @SuppressWarnings("unchecked")
         List<Object[]> resultList = query.list();
         ServiceHibernate.close();
 
-        return getProducts(resultList);
+        return getEntities(resultList);
     }
 
     @Override
@@ -131,9 +134,9 @@ public final class ProductService extends EntityService {
                     .append((i < columns.length - 1) ? ", " : " ");
         }
         sb.append("WHERE ")
-                .append(columns[0])
+                .append(columns[EProduct.id_product.ordinal()])
                 .append("=")
-                .append(params[0]);
+                .append(params[EProduct.id_product.ordinal()]);
         return sb.toString();
     }
 
@@ -145,34 +148,37 @@ public final class ProductService extends EntityService {
         String[] params = getParams().split(",");
 
         sb.append("WHERE ")
-                .append(columns[0])
+                .append(columns[EProduct.id_product.ordinal()])
                 .append("=")
-                .append(params[0]);
+                .append(params[EProduct.id_product.ordinal()]);
         return sb.toString();
     }
 
+    @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
         StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.product WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
+            Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())
-                    .append("=:")
-                    .append(criterionList.get(i).getParameter())
+                    .append(criterionList.get(i).getOperator().getQuery())
+                    .append((o != null) ? (":" + criterionList.get(i).getParameter()) : "")
                     .append((i + 1) < criterionList.size() ? " AND " : "");
         }
         return sb.toString();
     }
 
-    protected List<Product> getProducts(List<Object[]> resultList) {
+    @Override
+    protected List<Product> getEntities(List<Object[]> resultList) {
         List<Product> productList = new ArrayList<>();
         for (Object[] o : resultList) {
             productList.add(
                     Product.builder()
-                            .id((String) o[0])
-                            .name((String) o[1])
-                            .dateOfRelease((Date) o[2])
-                            .description((String) o[3])
-                            .ageLimit(ParseAgeLimit.getAgeLimit((Integer) o[4]))
-                            .price((Double) o[5])
+                            .id((String) o[EProduct.id_product.ordinal()])
+                            .name((String) o[EProduct.name.ordinal()])
+                            .dateOfRelease((Date) o[EProduct.date_of_release.ordinal()])
+                            .description((String) o[EProduct.destination.ordinal()])
+                            .ageLimit(ParseAgeLimit.getAgeLimit((Integer) o[EProduct.age_limit.ordinal()]))
+                            .price((Double) o[EProduct.price.ordinal()])
                             .build()
             );
         }

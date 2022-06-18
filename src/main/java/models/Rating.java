@@ -19,7 +19,7 @@ public class Rating implements Entity {
     private Date reviewDate;
 
     public String getReview() {
-        return review.toString();
+        return review;
     }
 
     public void setReview(String review) {

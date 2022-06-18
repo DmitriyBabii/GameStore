@@ -81,16 +81,21 @@ public class UserService extends EntityService {
         ServiceHibernate.close();
     }
 
+    @Override
     public List<AuthorizedUser> select(List<Criterion> criterionList) {
         ServiceHibernate.open();
+        @SuppressWarnings("rawtypes")
         NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
         for (Criterion criterion : criterionList) {
-            query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            if (criterion.getValue() != null) {
+                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            }
         }
+        @SuppressWarnings("unchecked")
         List<Object[]> resultList = query.list();
         ServiceHibernate.close();
 
-        return getUsers(resultList);
+        return getEntities(resultList);
     }
 
     @Override
@@ -137,9 +142,9 @@ public class UserService extends EntityService {
                     .append((i < columns.length - 1) ? ", " : " ");
         }
         sb.append("WHERE ")
-                .append(columns[0])
+                .append(columns[EUser.id_user.ordinal()])
                 .append("=")
-                .append(params[0]);
+                .append(params[EUser.id_user.ordinal()]);
         return sb.toString();
     }
 
@@ -151,77 +156,80 @@ public class UserService extends EntityService {
         String[] params = getParams().split(",");
 
         sb.append("WHERE ")
-                .append(columns[0])
+                .append(columns[EUser.id_user.ordinal()])
                 .append("=")
-                .append(params[0]);
+                .append(params[EUser.id_user.ordinal()]);
         return sb.toString();
     }
 
+    @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
         StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.user WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
+            Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())
-                    .append("=:")
-                    .append(criterionList.get(i).getParameter())
+                    .append(criterionList.get(i).getOperator().getQuery())
+                    .append((o != null) ? (":" + criterionList.get(i).getParameter()) : "")
                     .append((i + 1) < criterionList.size() ? " AND " : "");
         }
         return sb.toString();
     }
 
-    protected List<AuthorizedUser> getUsers(List<Object[]> resultList) {
+    @Override
+    protected List<AuthorizedUser> getEntities(List<Object[]> resultList) {
         List<AuthorizedUser> productList = new ArrayList<>();
         AuthorizedUser user = null;
         for (Object[] o : resultList) {
             switch (Role.valueOf((String) o[8])) {
                 case CLIENT: {
                     user = new Client(
-                            (String) o[0],
-                            (String) o[1],
-                            (String) o[2],
-                            (String) o[3],
-                            (String) o[4],
-                            (String) o[5],
-                            (String) o[6],
-                            (Date) o[7]
+                            (String) o[EUser.id_user.ordinal()],
+                            (String) o[EUser.name.ordinal()],
+                            (String) o[EUser.last_name.ordinal()],
+                            (String) o[EUser.username.ordinal()],
+                            (String) o[EUser.password.ordinal()],
+                            (String) o[EUser.phone_number.ordinal()],
+                            (String) o[EUser.email.ordinal()],
+                            (Date) o[EUser.date_of_birth.ordinal()]
                     );
                     break;
                 }
                 case MANAGER: {
                     user = new Manager(
-                            (String) o[0],
-                            (String) o[1],
-                            (String) o[2],
-                            (String) o[3],
-                            (String) o[4],
-                            (String) o[5],
-                            (String) o[6],
-                            (Date) o[7]
+                            (String) o[EUser.id_user.ordinal()],
+                            (String) o[EUser.name.ordinal()],
+                            (String) o[EUser.last_name.ordinal()],
+                            (String) o[EUser.username.ordinal()],
+                            (String) o[EUser.password.ordinal()],
+                            (String) o[EUser.phone_number.ordinal()],
+                            (String) o[EUser.email.ordinal()],
+                            (Date) o[EUser.date_of_birth.ordinal()]
                     );
                     break;
                 }
                 case STOREKEEPER: {
                     user = new Storekeeper(
-                            (String) o[0],
-                            (String) o[1],
-                            (String) o[2],
-                            (String) o[3],
-                            (String) o[4],
-                            (String) o[5],
-                            (String) o[6],
-                            (Date) o[7]
+                            (String) o[EUser.id_user.ordinal()],
+                            (String) o[EUser.name.ordinal()],
+                            (String) o[EUser.last_name.ordinal()],
+                            (String) o[EUser.username.ordinal()],
+                            (String) o[EUser.password.ordinal()],
+                            (String) o[EUser.phone_number.ordinal()],
+                            (String) o[EUser.email.ordinal()],
+                            (Date) o[EUser.date_of_birth.ordinal()]
                     );
                     break;
                 }
                 case COURIER: {
                     user = new Courier(
-                            (String) o[0],
-                            (String) o[1],
-                            (String) o[2],
-                            (String) o[3],
-                            (String) o[4],
-                            (String) o[5],
-                            (String) o[6],
-                            (Date) o[7]
+                            (String) o[EUser.id_user.ordinal()],
+                            (String) o[EUser.name.ordinal()],
+                            (String) o[EUser.last_name.ordinal()],
+                            (String) o[EUser.username.ordinal()],
+                            (String) o[EUser.password.ordinal()],
+                            (String) o[EUser.phone_number.ordinal()],
+                            (String) o[EUser.email.ordinal()],
+                            (Date) o[EUser.date_of_birth.ordinal()]
                     );
                     break;
                 }

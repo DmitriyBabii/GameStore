@@ -24,28 +24,3 @@ public enum EProductInOrder {
         this.query = str.append(",\n").toString();
     }
 }
-
-/**
- * "CREATE TABLE IF NOT EXISTS gameshop.product_in_order (\n" +
- * "id_order_fk VARCHAR(36) NOT NULL,\n" +
- * "id_product_fk VARCHAR(36) NOT NULL,\n" +
- * "FOREIGN KEY (id_product_fk) REFERENCES gameshop.product (id_product),\n" +
- * "FOREIGN KEY (id_order_fk) REFERENCES gameshop.order (id_order));"
- * <p>
- * CREATE TABLE `gameshop`.`new_table` (
- * `idnew_table` INT NULL,
- * `some_id` VARCHAR(45) NULL,
- * `some_another_id` VARCHAR(45) NULL,
- * INDEX `some_id_idx` (`some_id` ASC) VISIBLE,
- * INDEX `some_another_id_idx` (`some_another_id` ASC) VISIBLE,
- * CONSTRAINT `some_id`
- * FOREIGN KEY (`some_id`)
- * REFERENCES `gameshop`.`product` (`id_product`)
- * ON DELETE NO ACTION
- * ON UPDATE NO ACTION,
- * CONSTRAINT `some_another_id`
- * FOREIGN KEY (`some_another_id`)
- * REFERENCES `gameshop`.`order` (`id_order`)
- * ON DELETE NO ACTION
- * ON UPDATE NO ACTION);
- */

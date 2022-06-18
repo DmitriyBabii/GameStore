@@ -2,9 +2,9 @@ package services.entity;
 
 import intarfaces.Entity;
 import models.Criterion;
-import models.Storage;
+import models.ReservedProduct;
 import models.enums.EProduct;
-import models.enums.EStorage;
+import models.enums.EReservedProduct;
 import org.hibernate.query.NativeQuery;
 import services.CriterionService;
 import services.ServiceHibernate;
@@ -12,14 +12,14 @@ import services.ServiceHibernate;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class StorageService extends EntityService {
+public class ReservedProductService extends EntityService {
 
     @Override
     public void createTable() {
         ServiceHibernate.open();
         StringBuilder stringBuilder = new StringBuilder();
-        for (EStorage storage : EStorage.values()) {
-            stringBuilder.append(storage.getQuery());
+        for (EReservedProduct ReservedProduct : EReservedProduct.values()) {
+            stringBuilder.append(ReservedProduct.getQuery());
         }
         ServiceHibernate.getSession()
                 .createSQLQuery(stringBuilder.toString())
@@ -31,10 +31,10 @@ public final class StorageService extends EntityService {
     public void save(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            Storage storage = (Storage) value;
+            ReservedProduct reservedProduct = (ReservedProduct) value;
             ServiceHibernate.getSession().createSQLQuery(getInsertQuery())
-                    .setParameter(EStorage.id_product_fk.toString(), storage.getProduct().getId())
-                    .setParameter(EStorage.quantity.toString(), storage.getQuantity())
+                    .setParameter(EReservedProduct.id_product_fk.toString(), reservedProduct.getProduct().getId())
+                    .setParameter(EReservedProduct.quantity.toString(), reservedProduct.getQuantity())
                     .executeUpdate();
         }
         ServiceHibernate.close();
@@ -44,10 +44,10 @@ public final class StorageService extends EntityService {
     public void update(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            Storage storage = (Storage) value;
+            ReservedProduct reservedProduct = (ReservedProduct) value;
             ServiceHibernate.getSession().createSQLQuery(getUpdateQuery())
-                    .setParameter(EStorage.id_product_fk.toString(), storage.getProduct().getId())
-                    .setParameter(EStorage.quantity.toString(), storage.getQuantity())
+                    .setParameter(EReservedProduct.id_product_fk.toString(), reservedProduct.getProduct().getId())
+                    .setParameter(EReservedProduct.quantity.toString(), reservedProduct.getQuantity())
                     .executeUpdate();
         }
         ServiceHibernate.close();
@@ -57,17 +57,17 @@ public final class StorageService extends EntityService {
     public void delete(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
-            Storage storage = (Storage) value;
+            ReservedProduct reservedProduct = (ReservedProduct) value;
             ServiceHibernate.getSession()
                     .createSQLQuery(getDeleteQuery())
-                    .setParameter(EStorage.id_product_fk.toString(), storage.getProduct().getId())
+                    .setParameter(EReservedProduct.id_product_fk.toString(), reservedProduct.getProduct().getId())
                     .executeUpdate();
         }
         ServiceHibernate.close();
     }
 
     @Override
-    public List<Storage> select(List<Criterion> criterionList) {
+    public List<ReservedProduct> select(List<Criterion> criterionList) {
         ServiceHibernate.open();
         @SuppressWarnings("rawtypes")
         NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
@@ -87,9 +87,9 @@ public final class StorageService extends EntityService {
     protected String getColumns() {
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        for (EStorage s : EStorage.values()) {
+        for (EReservedProduct s : EReservedProduct.values()) {
             sb.append(s)
-                    .append((++count < EStorage.values().length) ? "," : "");
+                    .append((++count < EReservedProduct.values().length) ? "," : "");
         }
         return sb.toString();
     }
@@ -98,16 +98,16 @@ public final class StorageService extends EntityService {
     protected String getParams() {
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        for (EStorage s : EStorage.values()) {
+        for (EReservedProduct s : EReservedProduct.values()) {
             sb.append(":").append(s)
-                    .append((++count < EStorage.values().length) ? "," : "");
+                    .append((++count < EReservedProduct.values().length) ? "," : "");
         }
         return sb.toString();
     }
 
     @Override
     protected String getInsertQuery() {
-        return "INSERT INTO gameshop.storage (" + getColumns() +
+        return "INSERT INTO gameshop.reserved_product (" + getColumns() +
                 ") VALUES(" +
                 getParams() +
                 ")";
@@ -115,7 +115,7 @@ public final class StorageService extends EntityService {
 
     @Override
     protected String getUpdateQuery() {
-        StringBuilder sb = new StringBuilder("UPDATE gameshop.storage SET ");
+        StringBuilder sb = new StringBuilder("UPDATE gameshop.reserved_product SET ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -127,29 +127,29 @@ public final class StorageService extends EntityService {
                     .append((i < columns.length - 1) ? ", " : " ");
         }
         sb.append("WHERE ")
-                .append(columns[EStorage.id_product_fk.ordinal()])
+                .append(columns[EReservedProduct.id_product_fk.ordinal()])
                 .append("=")
-                .append(params[EStorage.id_product_fk.ordinal()]);
+                .append(params[EReservedProduct.id_product_fk.ordinal()]);
         return sb.toString();
     }
 
     @Override
     protected String getDeleteQuery() {
-        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.storage ");
+        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.reserved_product ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
 
         sb.append("WHERE ")
-                .append(columns[EStorage.id_product_fk.ordinal()])
+                .append(columns[EReservedProduct.id_product_fk.ordinal()])
                 .append("=")
-                .append(params[EStorage.id_product_fk.ordinal()]);
+                .append(params[EReservedProduct.id_product_fk.ordinal()]);
         return sb.toString();
     }
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.storage WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.reserved_product WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
             Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())
@@ -161,16 +161,16 @@ public final class StorageService extends EntityService {
     }
 
     @Override
-    protected List<Storage> getEntities(List<Object[]> resultList) {
+    protected List<ReservedProduct> getEntities(List<Object[]> resultList) {
         ProductService ps = new ProductService();
         CriterionService cs = new CriterionService();
-        List<Storage> productList = new ArrayList<>();
+        List<ReservedProduct> productList = new ArrayList<>();
         for (Object[] o : resultList) {
-            cs.addCriterion(EProduct.id_product, o[EStorage.id_product_fk.ordinal()]);
+            cs.addCriterion(EProduct.id_product, o[EReservedProduct.id_product_fk.ordinal()]);
             productList.add(
-                    Storage.builder()
+                    ReservedProduct.builder()
                             .product(ps.select(cs.getCriterionList()).get(0))
-                            .quantity((Integer) o[EStorage.quantity.ordinal()])
+                            .quantity((Integer) o[EReservedProduct.quantity.ordinal()])
                             .build()
             );
         }

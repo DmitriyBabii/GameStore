@@ -29,7 +29,9 @@ public class ServiceHibernate {
                 new ProductService(),
                 new StorageService(),
                 new RatingService(),
-                new OrderService()
+                new OrderService(),
+                new WaitingProductService(),
+                new ReservedProductService()
         };
         for (EntityRealize service : services) {
             service.createTable();

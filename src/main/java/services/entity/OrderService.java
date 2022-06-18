@@ -5,7 +5,6 @@ import models.Criterion;
 import models.Order;
 import models.Product;
 import models.enums.EOrder;
-import models.enums.EProduct;
 import models.enums.EProductInOrder;
 import models.enums.EUser;
 import models.figures.Client;
@@ -14,7 +13,6 @@ import models.figures.Manager;
 import models.figures.Storekeeper;
 import org.hibernate.query.NativeQuery;
 import services.CriterionService;
-import services.ParseAgeLimit;
 import services.ServiceHibernate;
 
 import java.sql.Date;
@@ -55,9 +53,9 @@ public final class OrderService extends EntityService {
                     .setParameter(EOrder.id_user_storekeeper_fk.toString(), order.getStorekeeper().getId())
                     .setParameter(EOrder.id_user_courier_fk.toString(), order.getCourier().getId())
                     .setParameter(EOrder.id_user_client_fk.toString(), order.getClient().getId())
-                    //.setParameter(EOrder.id_product_fk.toString(), order.getProduct().getId())
                     .setParameter(EOrder.price.toString(), order.getPrice())
                     .setParameter(EOrder.start_date.toString(), order.getStartOrder())
+                    .setParameter(EOrder.end_date_manager.toString(), order.getEndDateManager())
                     .setParameter(EOrder.end_date_storekeeper.toString(), order.getEndDateStorekeeper())
                     .setParameter(EOrder.end_date_courier.toString(), order.getEndDateCourier())
                     .executeUpdate();
@@ -84,9 +82,9 @@ public final class OrderService extends EntityService {
                     .setParameter(EOrder.id_user_storekeeper_fk.toString(), order.getStorekeeper().getId())
                     .setParameter(EOrder.id_user_courier_fk.toString(), order.getCourier().getId())
                     .setParameter(EOrder.id_user_client_fk.toString(), order.getClient().getId())
-                    //.setParameter(EOrder.id_product_fk.toString(), order.getProduct().getId())
                     .setParameter(EOrder.price.toString(), order.getPrice())
                     .setParameter(EOrder.start_date.toString(), order.getStartOrder())
+                    .setParameter(EOrder.end_date_manager.toString(), order.getEndDateManager())
                     .setParameter(EOrder.end_date_storekeeper.toString(), order.getEndDateStorekeeper())
                     .setParameter(EOrder.end_date_courier.toString(), order.getEndDateCourier())
                     .executeUpdate();
@@ -99,7 +97,7 @@ public final class OrderService extends EntityService {
         ServiceHibernate.open();
         for (Entity value : entity) {
             Order order = (Order) value;
-            for (Product p : order.getProducts()) {
+            for (Product ignored : order.getProducts()) {
                 ServiceHibernate.getSession().createSQLQuery(getDeleteQueryForProducts())
                         .setParameter(EProductInOrder.id_order_fk.toString(), order.getId())
                         .executeUpdate();
@@ -112,16 +110,21 @@ public final class OrderService extends EntityService {
         ServiceHibernate.close();
     }
 
+    @Override
     public List<Order> select(List<Criterion> criterionList) {
         ServiceHibernate.open();
+        @SuppressWarnings("rawtypes")
         NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
         for (Criterion criterion : criterionList) {
-            query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            if (criterion.getValue() != null) {
+                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            }
         }
+        @SuppressWarnings("unchecked")
         List<Object[]> resultList = query.list();
         ServiceHibernate.close();
 
-        return getOrders(resultList);
+        return getEntities(resultList);
     }
 
     @Override
@@ -195,9 +198,9 @@ public final class OrderService extends EntityService {
                     .append((i < columns.length - 1) ? ", " : " ");
         }
         sb.append("WHERE ")
-                .append(columns[0])
+                .append(columns[EOrder.id_order.ordinal()])
                 .append("=")
-                .append(params[0]);
+                .append(params[EOrder.id_order.ordinal()]);
         return sb.toString();
     }
 
@@ -209,9 +212,9 @@ public final class OrderService extends EntityService {
         String[] params = getParams().split(",");
 
         sb.append("WHERE ")
-                .append(columns[0])
+                .append(columns[EOrder.id_order.ordinal()])
                 .append("=")
-                .append(params[0]);
+                .append(params[EOrder.id_order.ordinal()]);
         return sb.toString();
     }
 
@@ -222,24 +225,27 @@ public final class OrderService extends EntityService {
         String[] params = getParamsForProducts().split(",");
 
         sb.append("WHERE ")
-                .append(columns[0])
+                .append(columns[EProductInOrder.id_order_fk.ordinal()])
                 .append("=")
-                .append(params[0]);
+                .append(params[EProductInOrder.id_order_fk.ordinal()]);
         return sb.toString();
     }
 
+    @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
         StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.order WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
+            Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())
-                    .append("=:")
-                    .append(criterionList.get(i).getParameter())
+                    .append(criterionList.get(i).getOperator().getQuery())
+                    .append((o != null) ? (":" + criterionList.get(i).getParameter()) : "")
                     .append((i + 1) < criterionList.size() ? " AND " : "");
         }
         return sb.toString();
     }
 
-    protected List<Order> getOrders(List<Object[]> resultList) {
+    @Override
+    protected List<Order> getEntities(List<Object[]> resultList) {
         UserService us = new UserService();
         CriterionService cClient = new CriterionService();
         CriterionService cManager = new CriterionService();
@@ -248,22 +254,23 @@ public final class OrderService extends EntityService {
 
         List<Order> productList = new ArrayList<>();
         for (Object[] o : resultList) {
-            cClient.addCriterion(EUser.id_user, (String) o[1]);
-            cManager.addCriterion(EUser.id_user, (String) o[2]);
-            cStorekeeper.addCriterion(EUser.id_user, (String) o[3]);
-            cCourier.addCriterion(EUser.id_user, (String) o[4]);
+            cClient.addCriterion(EUser.id_user, o[EOrder.id_user_client_fk.ordinal()]);
+            cManager.addCriterion(EUser.id_user, o[EOrder.id_user_manager_fk.ordinal()]);
+            cStorekeeper.addCriterion(EUser.id_user, o[EOrder.id_user_storekeeper_fk.ordinal()]);
+            cCourier.addCriterion(EUser.id_user, o[EOrder.id_user_courier_fk.ordinal()]);
 
             productList.add(
                     Order.builder()
-                            .id((String) o[0])
+                            .id((String) o[EOrder.id_order.ordinal()])
                             .client((Client) us.select(cClient.getCriterionList()).get(0))
                             .manager((Manager) us.select(cManager.getCriterionList()).get(0))
                             .storekeeper((Storekeeper) us.select(cStorekeeper.getCriterionList()).get(0))
                             .courier((Courier) us.select(cCourier.getCriterionList()).get(0))
-                            .price((Double) o[5])
-                            .startOrder((Date) o[6])
-                            .endDateStorekeeper((Date) o[7])
-                            .endDateCourier((Date) o[8])
+                            .price((Double) o[EOrder.price.ordinal()])
+                            .startOrder((Date) o[EOrder.start_date.ordinal()])
+                            .endDateManager((Date) o[EOrder.end_date_manager.ordinal()])
+                            .endDateStorekeeper((Date) o[EOrder.end_date_storekeeper.ordinal()])
+                            .endDateCourier((Date) o[EOrder.end_date_courier.ordinal()])
                             .build()
             );
         }

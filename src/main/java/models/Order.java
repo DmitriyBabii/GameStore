@@ -22,9 +22,10 @@ public class Order implements Entity {
     private final Courier courier;
     private final Client client;
     @Setter(AccessLevel.NONE)
-    private List<Product> products = null;
+    private List<Product> products;
     private final Double price;
     private final Date startOrder;
+    private Date endDateManager;
     private Date endDateStorekeeper;
     private Date endDateCourier;
 
@@ -42,8 +43,13 @@ public class Order implements Entity {
         this.endDateCourier = null;
     }
 
-    public Order(String id, Manager manager, Storekeeper storekeeper, Courier courier, Client client,
-                 List<Product> products, Double price, Date startOrder, Date endDateStorekeeper, Date endDateCourier) {
+    /**
+     * Need for builder
+     */
+    @SuppressWarnings("unused")
+    public Order(String id, Manager manager, Storekeeper storekeeper, Courier courier,
+                 Client client, List<Product> products, Double price, Date startOrder,
+                 Date endDateManager, Date endDateStorekeeper, Date endDateCourier) {
         this.id = id;
         this.manager = manager;
         this.storekeeper = storekeeper;
@@ -52,6 +58,7 @@ public class Order implements Entity {
         this.products = products;
         this.price = price;
         this.startOrder = startOrder;
+        this.endDateManager = endDateManager;
         this.endDateStorekeeper = endDateStorekeeper;
         this.endDateCourier = endDateCourier;
     }
@@ -71,6 +78,7 @@ public class Order implements Entity {
                 ", products=" + products +
                 ", price=" + price +
                 ", startOrder=" + startOrder +
+                ", endDateManager=" + endDateManager +
                 ", endDateStorekeeper=" + endDateStorekeeper +
                 ", endDateCourier=" + endDateCourier +
                 '}';

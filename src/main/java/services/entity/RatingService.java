@@ -74,16 +74,21 @@ public final class RatingService extends EntityService {
         ServiceHibernate.close();
     }
 
+    @Override
     public List<Rating> select(List<Criterion> criterionList) {
         ServiceHibernate.open();
+        @SuppressWarnings("rawtypes")
         NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
         for (Criterion criterion : criterionList) {
-            query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            if (criterion.getValue() != null) {
+                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            }
         }
+        @SuppressWarnings("unchecked")
         List<Object[]> resultList = query.list();
         ServiceHibernate.close();
 
-        return getRatings(resultList);
+        return getEntities(resultList);
     }
 
     @Override
@@ -130,9 +135,13 @@ public final class RatingService extends EntityService {
                     .append((i < columns.length - 1) ? ", " : " ");
         }
         sb.append("WHERE ")
-                .append(columns[0])
+                .append(columns[ERating.id_user_fk.ordinal()])
                 .append("=")
-                .append(params[0]);
+                .append(params[ERating.id_user_fk.ordinal()])
+                .append(" AND ")
+                .append(columns[ERating.id_product_fk.ordinal()])
+                .append("=")
+                .append(params[ERating.id_product_fk.ordinal()]);
         return sb.toString();
     }
 
@@ -143,23 +152,32 @@ public final class RatingService extends EntityService {
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
 
-        sb.append("WHERE ").append(columns[0]).append("=").append(params[0])
-                .append(" AND ").append(columns[1]).append("=").append(params[1]);
+        sb.append("WHERE ")
+                .append(columns[ERating.id_user_fk.ordinal()])
+                .append("=")
+                .append(params[ERating.id_user_fk.ordinal()])
+                .append(" AND ")
+                .append(columns[ERating.id_product_fk.ordinal()])
+                .append("=")
+                .append(params[ERating.id_product_fk.ordinal()]);
         return sb.toString();
     }
 
+    @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
         StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.rating WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
+            Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())
-                    .append("=:")
-                    .append(criterionList.get(i).getParameter())
+                    .append(criterionList.get(i).getOperator().getQuery())
+                    .append((o != null) ? (":" + criterionList.get(i).getParameter()) : "")
                     .append((i + 1) < criterionList.size() ? " AND " : "");
         }
         return sb.toString();
     }
 
-    protected List<Rating> getRatings(List<Object[]> resultList) {
+    @Override
+    protected List<Rating> getEntities(List<Object[]> resultList) {
         UserService us = new UserService();
         ProductService ps = new ProductService();
         CriterionService cProduct = new CriterionService();
@@ -167,14 +185,14 @@ public final class RatingService extends EntityService {
 
         List<Rating> productList = new ArrayList<>();
         for (Object[] o : resultList) {
-            cUser.addCriterion(EUser.id_user, (String) o[0]);
-            cProduct.addCriterion(EProduct.id_product, (String) o[1]);
+            cUser.addCriterion(EUser.id_user, o[ERating.id_user_fk.ordinal()]);
+            cProduct.addCriterion(EProduct.id_product, o[ERating.id_product_fk.ordinal()]);
             productList.add(
                     Rating.builder()
                             .client((Client) us.select(cUser.getCriterionList()).get(0))
                             .product(ps.select(cProduct.getCriterionList()).get(0))
-                            .review((String) o[2])
-                            .reviewDate((Date) o[3])
+                            .review((String) o[ERating.review.ordinal()])
+                            .reviewDate((Date) o[ERating.review_date.ordinal()])
                             .build()
             );
         }

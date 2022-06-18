@@ -17,11 +17,16 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         ServiceHibernate.start();
-        Text text = new Text("dadsasd");
         Product product = new Product("Witcher 3", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 5000.0);
-        Product product1 = new Product("Witcher 2", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 1.1);
+        Product product1 = new Product("Witcher 2", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 3.0);
         Product product2 = new Product("Witcher 1", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 2.2);
+
         Storage storage = new Storage(product, 10);
+
+        WaitingProduct waitingProduct = new WaitingProduct(product1, 1);
+
+        ReservedProduct reservedProduct = new ReservedProduct(product1, 1);
+
         Client client = new Client("Dima", "Babii", "Mitar", "Babii0706",
                 "+380504021867", "v.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
         Rating rating = new Rating(client, product, "dadsasd", Date.valueOf(LocalDate.now()));
@@ -49,14 +54,18 @@ public class Main {
         UserService userService = new UserService();
         RatingService ratingService = new RatingService();
         OrderService orderService = new OrderService();
+        WaitingProductService waitingProductService = new WaitingProductService();
+        ReservedProductService reservedProductService = new ReservedProductService();
 
-        productService.save(product, product1);
+        productService.save(product, product1, product2);
         storageService.save(storage);
         userService.save(entities);
         ratingService.save(rating);
         orderService.save(order);
+        waitingProductService.save(waitingProduct);
+        reservedProductService.save(reservedProduct);
 
-        product.setPrice(1.1);
+        product.setPrice(0.1);
         storage.setQuantity(1);
         client.setName("1");
         manager.setName("1");
@@ -65,6 +74,8 @@ public class Main {
         rating.setReview("1");
         order.setEndDateStorekeeper(Date.valueOf(LocalDate.now()));
         order.addProduct(product2);
+        waitingProduct.setQuantity(2);
+        reservedProduct.setQuantity(2);
 
         productService.update(product);
         storageService.update(storage);
@@ -74,11 +85,13 @@ public class Main {
         userService.update(courier);
         ratingService.update(rating);
         orderService.update(order);
+        waitingProductService.update(waitingProduct);
+        reservedProductService.update(reservedProduct);
 
 
         CriterionService criterionProduct = new CriterionService();
         criterionProduct.addCriterion(EProduct.name, "Witcher 3");
-        criterionProduct.addCriterion(EProduct.price, 1.1);
+        criterionProduct.addCriterion(EProduct.price, Operator.NOT_EQUALS, 2.2);
         System.out.println(productService.select(criterionProduct.getCriterionList()));
 
         CriterionService criterionStorage = new CriterionService();
@@ -95,12 +108,23 @@ public class Main {
 
         CriterionService criterionOrder = new CriterionService();
         criterionOrder.addCriterion(EOrder.price, 2200);
+        criterionOrder.addCriterion(EOrder.end_date_storekeeper, Operator.NOT_NULL, null);
         System.out.println(orderService.select(criterionOrder.getCriterionList()));
 
-        /*storageService.delete(storage);
+        CriterionService criterionWaiting = new CriterionService();
+        criterionWaiting.addCriterion(EWaitingProduct.quantity, 2);
+        System.out.println(waitingProductService.select(criterionWaiting.getCriterionList()));
+
+        CriterionService criterionReserved = new CriterionService();
+        criterionReserved.addCriterion(EReservedProduct.quantity, 2);
+        System.out.println(reservedProductService.select(criterionReserved.getCriterionList()));
+
+        storageService.delete(storage);
         orderService.delete(order);
         ratingService.delete(rating);
         productService.delete(product);
-        userService.delete(entities);*/
+        userService.delete(entities);
+        waitingProductService.delete(waitingProduct);
+        reservedProductService.delete(reservedProduct);
     }
 }
