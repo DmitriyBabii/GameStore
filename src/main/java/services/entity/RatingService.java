@@ -115,7 +115,7 @@ public final class RatingService extends EntityService {
 
     @Override
     protected String getInsertQuery() {
-        return "INSERT INTO gameshop.rating (" + getColumns() +
+        return "INSERT INTO game_shop.rating (" + getColumns() +
                 ") VALUES(" +
                 getParams() +
                 ")";
@@ -123,7 +123,7 @@ public final class RatingService extends EntityService {
 
     @Override
     protected String getUpdateQuery() {
-        StringBuilder sb = new StringBuilder("UPDATE gameshop.rating SET ");
+        StringBuilder sb = new StringBuilder("UPDATE game_shop.rating SET ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -147,7 +147,7 @@ public final class RatingService extends EntityService {
 
     @Override
     protected String getDeleteQuery() {
-        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.rating ");
+        StringBuilder sb = new StringBuilder("DELETE FROM game_shop.rating ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -165,7 +165,7 @@ public final class RatingService extends EntityService {
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.rating WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.rating WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
             Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public enum EOrder implements EntityEnum {
-    id_order("CREATE TABLE IF NOT EXISTS gameshop.order (\n"
+    id_order("CREATE TABLE IF NOT EXISTS game_shop.order (\n"
             + "id_order", MySQLType.ID, MySQLAttribute.NOT_NULL),
     id_user_client_fk("id_user_client_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
     id_user_manager_fk("id_user_manager_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),

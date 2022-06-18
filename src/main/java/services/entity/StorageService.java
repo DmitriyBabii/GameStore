@@ -107,7 +107,7 @@ public final class StorageService extends EntityService {
 
     @Override
     protected String getInsertQuery() {
-        return "INSERT INTO gameshop.storage (" + getColumns() +
+        return "INSERT INTO game_shop.storage (" + getColumns() +
                 ") VALUES(" +
                 getParams() +
                 ")";
@@ -115,7 +115,7 @@ public final class StorageService extends EntityService {
 
     @Override
     protected String getUpdateQuery() {
-        StringBuilder sb = new StringBuilder("UPDATE gameshop.storage SET ");
+        StringBuilder sb = new StringBuilder("UPDATE game_shop.storage SET ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -135,7 +135,7 @@ public final class StorageService extends EntityService {
 
     @Override
     protected String getDeleteQuery() {
-        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.storage ");
+        StringBuilder sb = new StringBuilder("DELETE FROM game_shop.storage ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -149,7 +149,7 @@ public final class StorageService extends EntityService {
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.storage WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.storage WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
             Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())

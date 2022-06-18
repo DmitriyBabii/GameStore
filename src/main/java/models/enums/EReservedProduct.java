@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum EReservedProduct implements EntityEnum {
-    id_product_fk("CREATE TABLE IF NOT EXISTS gameshop.reserved_product (\n"
+    id_product_fk("CREATE TABLE IF NOT EXISTS game_shop.reserved_product (\n"
             + "id_product_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
     quantity("quantity" + MySQLType.INT + MySQLAttribute.NOT_NULL + ",\n"
             + "FOREIGN KEY (id_product_fk)  REFERENCES product (id_product));");

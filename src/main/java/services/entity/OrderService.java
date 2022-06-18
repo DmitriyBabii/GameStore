@@ -171,14 +171,14 @@ public final class OrderService extends EntityService {
 
     @Override
     protected String getInsertQuery() {
-        return "INSERT INTO gameshop.order (" + getColumns() +
+        return "INSERT INTO game_shop.order (" + getColumns() +
                 ") VALUES(" +
                 getParams() +
                 ")";
     }
 
     protected String getInsertQueryForProducts() {
-        return "INSERT INTO gameshop.product_in_order (" + getColumnsForProducts() +
+        return "INSERT INTO game_shop.product_in_order (" + getColumnsForProducts() +
                 ") VALUES(" +
                 getParamsForProducts() +
                 ")";
@@ -186,7 +186,7 @@ public final class OrderService extends EntityService {
 
     @Override
     protected String getUpdateQuery() {
-        StringBuilder sb = new StringBuilder("UPDATE gameshop.order SET ");
+        StringBuilder sb = new StringBuilder("UPDATE game_shop.order SET ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -206,7 +206,7 @@ public final class OrderService extends EntityService {
 
     @Override
     protected String getDeleteQuery() {
-        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.order ");
+        StringBuilder sb = new StringBuilder("DELETE FROM game_shop.order ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -219,7 +219,7 @@ public final class OrderService extends EntityService {
     }
 
     protected String getDeleteQueryForProducts() {
-        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.product_in_order ");
+        StringBuilder sb = new StringBuilder("DELETE FROM game_shop.product_in_order ");
 
         String[] columns = getColumnsForProducts().split(",");
         String[] params = getParamsForProducts().split(",");
@@ -233,7 +233,7 @@ public final class OrderService extends EntityService {
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.order WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.order WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
             Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())

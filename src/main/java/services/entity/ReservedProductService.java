@@ -107,7 +107,7 @@ public class ReservedProductService extends EntityService {
 
     @Override
     protected String getInsertQuery() {
-        return "INSERT INTO gameshop.reserved_product (" + getColumns() +
+        return "INSERT INTO game_shop.reserved_product (" + getColumns() +
                 ") VALUES(" +
                 getParams() +
                 ")";
@@ -115,7 +115,7 @@ public class ReservedProductService extends EntityService {
 
     @Override
     protected String getUpdateQuery() {
-        StringBuilder sb = new StringBuilder("UPDATE gameshop.reserved_product SET ");
+        StringBuilder sb = new StringBuilder("UPDATE game_shop.reserved_product SET ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -135,7 +135,7 @@ public class ReservedProductService extends EntityService {
 
     @Override
     protected String getDeleteQuery() {
-        StringBuilder sb = new StringBuilder("DELETE FROM gameshop.reserved_product ");
+        StringBuilder sb = new StringBuilder("DELETE FROM game_shop.reserved_product ");
 
         String[] columns = getColumns().split(",");
         String[] params = getParams().split(",");
@@ -149,7 +149,7 @@ public class ReservedProductService extends EntityService {
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM gameshop.reserved_product WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.reserved_product WHERE ");
         for (int i = 0; i < criterionList.size(); i++) {
             Object o = criterionList.get(i).getValue();
             sb.append(criterionList.get(i).getParameter())

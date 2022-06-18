@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum EWaitingProduct implements EntityEnum {
-    id_product_fk("CREATE TABLE IF NOT EXISTS gameshop.waiting_product (\n"
+    id_product_fk("CREATE TABLE IF NOT EXISTS game_shop.waiting_product (\n"
             + "id_product_fk", MySQLType.ID, MySQLAttribute.NOT_NULL),
     quantity("quantity" + MySQLType.INT + MySQLAttribute.NOT_NULL + ",\n"
             + "FOREIGN KEY (id_product_fk)  REFERENCES product (id_product));");
