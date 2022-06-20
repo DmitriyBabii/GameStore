@@ -2,10 +2,10 @@ package services.entity;
 
 import intarfaces.Entity;
 import models.Criterion;
+import models.Product;
 import models.WaitingProduct;
 import models.enums.EProduct;
 import models.enums.EWaitingProduct;
-import org.hibernate.query.NativeQuery;
 import services.CriterionService;
 import services.ServiceHibernate;
 
@@ -64,23 +64,6 @@ public class WaitingProductService extends EntityService {
                     .executeUpdate();
         }
         ServiceHibernate.close();
-    }
-
-    @Override
-    public List<WaitingProduct> select(List<Criterion> criterionList) {
-        ServiceHibernate.open();
-        @SuppressWarnings("rawtypes")
-        NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
-        for (Criterion criterion : criterionList) {
-            if (criterion.getValue() != null) {
-                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
-            }
-        }
-        @SuppressWarnings("unchecked")
-        List<Object[]> resultList = query.list();
-        ServiceHibernate.close();
-
-        return getEntities(resultList);
     }
 
     @Override
@@ -150,14 +133,7 @@ public class WaitingProductService extends EntityService {
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
         StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.waiting_product WHERE ");
-        for (int i = 0; i < criterionList.size(); i++) {
-            Object o = criterionList.get(i).getValue();
-            sb.append(criterionList.get(i).getParameter())
-                    .append(criterionList.get(i).getOperator().getQuery())
-                    .append((o != null) ? (":" + criterionList.get(i).getParameter()) : "")
-                    .append((i + 1) < criterionList.size() ? " AND " : "");
-        }
-        return sb.toString();
+        return useCriterion(sb, criterionList);
     }
 
     @Override
@@ -169,7 +145,7 @@ public class WaitingProductService extends EntityService {
             cs.addCriterion(EProduct.id_product, o[EWaitingProduct.id_product_fk.ordinal()]);
             productList.add(
                     WaitingProduct.builder()
-                            .product(ps.select(cs.getCriterionList()).get(0))
+                            .product((Product) ps.select(cs.getCriterionList()).get(0))
                             .quantity((Integer) o[EWaitingProduct.quantity.ordinal()])
                             .build()
             );

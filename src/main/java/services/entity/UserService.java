@@ -5,7 +5,6 @@ import models.Criterion;
 import models.enums.EUser;
 import models.enums.Role;
 import models.figures.*;
-import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
 
 import java.sql.Date;
@@ -82,23 +81,6 @@ public class UserService extends EntityService {
     }
 
     @Override
-    public List<AuthorizedUser> select(List<Criterion> criterionList) {
-        ServiceHibernate.open();
-        @SuppressWarnings("rawtypes")
-        NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
-        for (Criterion criterion : criterionList) {
-            if (criterion.getValue() != null) {
-                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
-            }
-        }
-        @SuppressWarnings("unchecked")
-        List<Object[]> resultList = query.list();
-        ServiceHibernate.close();
-
-        return getEntities(resultList);
-    }
-
-    @Override
     protected String getColumns() {
         StringBuilder sb = new StringBuilder();
         int count = 0;
@@ -165,14 +147,7 @@ public class UserService extends EntityService {
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
         StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.user WHERE ");
-        for (int i = 0; i < criterionList.size(); i++) {
-            Object o = criterionList.get(i).getValue();
-            sb.append(criterionList.get(i).getParameter())
-                    .append(criterionList.get(i).getOperator().getQuery())
-                    .append((o != null) ? (":" + criterionList.get(i).getParameter()) : "")
-                    .append((i + 1) < criterionList.size() ? " AND " : "");
-        }
-        return sb.toString();
+        return useCriterion(sb, criterionList);
     }
 
     @Override
