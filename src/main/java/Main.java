@@ -122,9 +122,9 @@ public class Main {
         storageService.delete(storage);
         orderService.delete(order);
         ratingService.delete(rating);
-        productService.delete(product);
         userService.delete(entities);
         waitingProductService.delete(waitingProduct);
         reservedProductService.delete(reservedProduct);
+        productService.delete(product, product1, product2);
     }
 }

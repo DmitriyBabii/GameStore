@@ -11,7 +11,6 @@ import models.figures.Client;
 import models.figures.Courier;
 import models.figures.Manager;
 import models.figures.Storekeeper;
-import org.hibernate.query.NativeQuery;
 import services.CriterionService;
 import services.ServiceHibernate;
 
@@ -108,23 +107,6 @@ public final class OrderService extends EntityService {
                     .executeUpdate();
         }
         ServiceHibernate.close();
-    }
-
-    @Override
-    public List<Order> select(List<Criterion> criterionList) {
-        ServiceHibernate.open();
-        @SuppressWarnings("rawtypes")
-        NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
-        for (Criterion criterion : criterionList) {
-            if (criterion.getValue() != null) {
-                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
-            }
-        }
-        @SuppressWarnings("unchecked")
-        List<Object[]> resultList = query.list();
-        ServiceHibernate.close();
-
-        return getEntities(resultList);
     }
 
     @Override
@@ -234,14 +216,7 @@ public final class OrderService extends EntityService {
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
         StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.order WHERE ");
-        for (int i = 0; i < criterionList.size(); i++) {
-            Object o = criterionList.get(i).getValue();
-            sb.append(criterionList.get(i).getParameter())
-                    .append(criterionList.get(i).getOperator().getQuery())
-                    .append((o != null) ? (":" + criterionList.get(i).getParameter()) : "")
-                    .append((i + 1) < criterionList.size() ? " AND " : "");
-        }
-        return sb.toString();
+        return useCriterion(sb, criterionList);
     }
 
     @Override

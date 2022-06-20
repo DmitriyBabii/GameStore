@@ -1,0 +1,287 @@
+
+/*START SETTINGS*/
+*, *::before, *::after{
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #e8ffe1;
+}
+
+
+/*HEADER*/
+.nav-box{
+    position: relative;
+    margin: auto;
+    width: 95%;
+    border-radius: 10px;
+    background-color: #009800;
+}
+
+.nav-container{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 80px;
+}
+
+input, input::placeholder{
+    font: 20px/3 Helvetica;
+}
+
+.search-bar{
+    display: flex;
+    align-items: center;
+    height: 45%;
+    width: 22%;
+    margin-left: 3%;
+    border-radius: 5px;
+    border: 0;
+}
+
+.search{
+    height: 100%;
+    width: 100%;
+    margin-right: 17px;
+    border-radius: 5px;
+    border: 0;
+}
+
+.search-button img{
+    position: relative;
+    top: 2px;
+    width: 35px;
+    border-radius: 50%;
+    border: 0;
+}
+
+.button-bar{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-left: auto;
+    margin-right: 3%;
+}
+
+.button-bar div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    height: 60%;
+    width: 100px;
+    margin-left: 5px;
+    background-color: #009800;
+    color: white;
+    font-size: 22px;
+    font-family: Helvetica;
+    border: 0;
+}
+
+.button-bar div a{
+
+    width: 100%;
+    color: white;
+    text-decoration: none;
+    border: none;
+}
+
+.button-bar div:nth-of-type(4){
+    margin-left: 25px;
+    font-weight: bold;
+}
+
+.button-bar div::after{
+    display: block;
+    content: ''; 
+    height: 2px; 
+    width: 0%; 
+    background-color: white;
+    transition: 0.5s;
+}
+
+.button-bar div:hover::after{
+    display: block;
+    content: ''; 
+    height: 2px; 
+    width: 100%; 
+    background-color: white; 
+    transition: 0.5s;
+}
+
+
+/*CONTENT*/
+.content-box{
+    width: 80%;
+    margin-top: 30px;
+    margin-left: 10%;
+}
+
+.chapter{
+    font-family: 'Trebuchet MS';
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.chapter::after{
+    display: block;
+    content: ''; 
+    height: 3px; 
+    width: 100%; 
+    background-color: black; 
+    transition: 0.5s;
+}
+
+.store{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.cart{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.game-name{
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.store-game, .cart-game{
+    color: black;
+    text-decoration: none;
+    border: none;
+}
+
+
+/*STORE*/
+.store-game{
+    width: 230px;
+    margin-top: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
+    padding-bottom:50px;
+    border-radius: 5px;
+}
+
+.store-game:hover{
+    background-color: #B8EAA8;
+}
+
+.store-game h2{
+    font-family: 'Trebuchet MS';
+}
+
+.store-game img{
+    height: 329px;
+    width: 230px;
+    border-radius: 5px;
+}
+
+
+/*CART*/
+.cart-game{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 30px;
+    border-radius: 5px;
+}
+
+.cart-game img{
+    height: 100px;
+    border-radius: 5px;
+}
+
+.cart-game:hover{
+    background-color: #B8EAA8;
+}
+
+.cart-game h2{
+    font-family: 'Trebuchet MS';
+    margin-left: 15px;
+}
+
+/*LOG IN*/
+.login{
+    height: 450px;
+    width: 100%;
+    background-image:   
+    linear-gradient(to left, rgba(232, 255, 225, 0), rgba(232, 255, 225, 1)),
+     url('/Обучение/Универ/2 КУРС/2 семестр/ТКП/Kursovaja/GameStore/src/main/java/web/img/log_in.jpg');
+     background-size: cover;
+}
+
+.name{
+    font-family: 'Helvetica';
+    font-size: 30px;
+    text-align: center;
+    border-bottom: 2px solid black;
+    border-radius: 2px;
+    padding-top: 15px;
+    margin-bottom: 10px;
+}
+
+.choose-form div{
+    font-family: 'Helvetica';
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.login-form{
+    margin-left: 15px;
+    width: 25%;
+}
+
+.fill-form{
+    display: flex;
+    flex-direction: column;
+}
+
+.fill{
+    height: 40px;
+    margin-bottom: 15px;
+    border: 1px solid #009800;
+    border-radius: 5px;
+}
+
+.fill-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    background-color: #009800;
+    border-radius: 3px;
+    color: white;
+    text-decoration: none;
+    border: none;
+}
+
+
+/*FOOTER*/
+.footer-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    margin: auto;
+    margin-top: 20px;
+    width: 95%;
+    border-radius: 10px;
+    background-color: #009800;
+}
+
+.footer-box a{
+    color: white;
+    font-size: 30px;
+    font-family: 'Trebuchet MS';
+    text-decoration: none;
+    border: none;
+}
+
+
