@@ -13,7 +13,8 @@ public enum Operator {
     GREATER_EQUALS(">="),
     NOT_EQUALS("!="),
     IS_NULL(" IS NULL"),
-    NOT_NULL(" IS NOT NULL");
+    NOT_NULL(" IS NOT NULL"),
+    LIKE(" LIKE");
 
     private final String query;
 }

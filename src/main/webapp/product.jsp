@@ -1,10 +1,17 @@
+<%@ page import="services.CriterionService"%>
+<%@ page import="models.enums.*"%>
+<%@ page import="java.util.List"%>
+<%@ page import="services.entity.*"%>
+<%@ page import="intarfaces.Entity"%>
+<%@ page import="models.*"%>
+<%@ page import="services.servlets.StoreServlet"%>
+<%@ page import="services.ServiceHibernate"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Log in</title>
-    <link rel="stylesheet" href="css/style.css">
-
+    <title>Product</title>
     <style>
 /*START SETTINGS*/
 *, *::before, *::after{
@@ -156,6 +163,7 @@ input, input::placeholder{
 .game-name{
     margin-top: 10px;
     margin-bottom: 0;
+    font-family: 'Helvetica';
     text-align: center;
 }
 
@@ -168,7 +176,8 @@ input, input::placeholder{
 
 /*STORE*/
 .store-game{
-    width: 230px;
+    display: flex;
+    width: 100%;
     margin-top: 30px;
     margin-left: 30px;
     margin-right: 30px;
@@ -176,12 +185,20 @@ input, input::placeholder{
     border-radius: 5px;
 }
 
-.store-game:hover{
-    background-color: #B8EAA8;
+.store-game .text-block{
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-left: 25px;
+    text-align: center;
+    font-family: 'Trebuchet MS';
 }
 
-.store-game h2{
-    font-family: 'Trebuchet MS';
+.text-block p{
+    text-align: justify;
+    font-size: 20px;
 }
 
 .store-game img{
@@ -192,6 +209,22 @@ input, input::placeholder{
 
 
 /*CART*/
+.to-cart{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    height: 40px;
+    width: 100%;
+    background-color: ${color};
+    border-radius: 3px;
+    color: white;
+    text-decoration: none;
+    font-family: 'Helvetica';
+    font-size: 18px;
+    border: none;
+}
+
 .cart-game{
     display: flex;
     align-items: center;
@@ -221,7 +254,7 @@ input, input::placeholder{
     width: 100%;
     background-image:
     linear-gradient(to left, rgba(232, 255, 225, 0), rgba(232, 255, 225, 1)),
-     url('https://images.ctfassets.net/5lpapfxq15sk/1BMmGdciozsPwqKroYYjHe/fef1914f155c9ee4397e6ae30c9a2964/amazongames-NW-ka.jpg');
+     url('/Обучение/Универ/2 КУРС/2 семестр/ТКП/Kursovaja/GameStore/src/main/java/web/img/log_in.jpg');
      background-size: cover;
 }
 
@@ -229,7 +262,6 @@ input, input::placeholder{
     font-family: 'Helvetica';
     font-size: 30px;
     text-align: center;
-    color: black;
 }
 
 .name::after{
@@ -286,11 +318,6 @@ input, input::placeholder{
     border: none;
 }
 
-#password{
-    -webkit-text-security: circle;
-    font-size: 30px;
-}
-
 .register-button{
     display: flex;
     justify-content: center;
@@ -329,7 +356,6 @@ input, input::placeholder{
     border: none;
 }
     </style>
-
 </head>
 <body>
     <nav class="nav-box">
@@ -346,15 +372,27 @@ input, input::placeholder{
         </div>
     </nav>
     <div class="content-box">
-        <div class="login">
-            <div class="login-form">
-                <div class="name">${data}</div>
-                <form method="post" class="fill-form">
-                    <input name="username" class="fill" type="text" placeholder="   Username">
-                    <input id="password" name="password" class="fill" type="text" placeholder="   Password">
-                    <button class="fill-button" type="submit">Confirm</button>
-                    <a class="register-button" href="#">Registration</a>
-                </form>
+        <h1 class="chapter">Product</h1>
+        <div class="store">
+        <%
+            ProductService productService = new ProductService();
+            List<? extends Entity> list = productService.select(ServiceHibernate.getCriterion());
+
+            for(Entity e: list){
+            Product product = (Product) e;
+                out.print("<div class='store-game'><div class='image'>");
+                out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='"+product.getName()+"'>");
+                out.print("<form  method='post'><button class='to-cart' name='tocart' type='submit'>To cart</button></form></div>");
+                out.print("<div class='text-block'>");
+                out.print("<h2 class='game-name'>" + product.getName() + "</h2>");
+                out.print("</a>");
+                out.print("<p class='description'>");
+                out.print(product.getDescription());
+                out.print("</p></div>");
+            }
+        %>
+
+
             </div>
         </div>
     </div>

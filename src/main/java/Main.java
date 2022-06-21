@@ -16,6 +16,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        start();
+    }
+
+    public static void start() {
         ServiceHibernate.start();
         Product product = new Product("Witcher 3", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 5000.0);
         Product product1 = new Product("Witcher 2", Date.valueOf(LocalDate.now()), "dadsasd", AgeLimit._18, 3.0);

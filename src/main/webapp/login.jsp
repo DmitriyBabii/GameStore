@@ -229,7 +229,7 @@ input, input::placeholder{
     font-family: 'Helvetica';
     font-size: 30px;
     text-align: center;
-    color: black;
+    color: ${color};
 }
 
 .name::after{
@@ -237,7 +237,7 @@ input, input::placeholder{
     content: '';
     height: 2px;
     width: 100%;
-    background-color: black;
+    background-color: ${color};
     margin-top: 15px;
     margin-bottom: 20px;
 }
@@ -265,7 +265,7 @@ input, input::placeholder{
     height: 40px;
     width: 100%;
     margin-bottom: 20px;
-    background-color: #D1DDCD;
+    background-color: white;
     border: 1px solid #009800;
     border-radius: 5px;
 }

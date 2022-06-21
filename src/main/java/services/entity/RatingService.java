@@ -148,7 +148,11 @@ public final class RatingService extends EntityService {
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.rating WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.rating");
+        if (criterionList.size() == 0) {
+            return sb.toString();
+        }
+        sb.append(" WHERE ");
         return useCriterion(sb, criterionList);
     }
 

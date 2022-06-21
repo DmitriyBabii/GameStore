@@ -215,7 +215,11 @@ public final class OrderService extends EntityService {
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.order WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.order");
+        if (criterionList.size() == 0) {
+            return sb.toString();
+        }
+        sb.append(" WHERE ");
         return useCriterion(sb, criterionList);
     }
 
