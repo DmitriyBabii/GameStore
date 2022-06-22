@@ -7,6 +7,7 @@ import models.Rating;
 import models.enums.EProduct;
 import models.enums.ERating;
 import models.enums.EUser;
+import models.figures.AuthorizedUser;
 import models.figures.Client;
 import services.CriterionService;
 import services.ServiceHibernate;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class RatingService extends EntityService {
+    private static final CriterionService cs = new CriterionService();
 
     @Override
     public void createTable() {
@@ -169,7 +171,7 @@ public final class RatingService extends EntityService {
             cProduct.addCriterion(EProduct.id_product, o[ERating.id_product_fk.ordinal()]);
             productList.add(
                     Rating.builder()
-                            .client((Client) us.select(cUser.getCriterionList()).get(0))
+                            .client((AuthorizedUser) us.select(cUser.getCriterionList()).get(0))
                             .product((Product) ps.select(cProduct.getCriterionList()).get(0))
                             .review((String) o[ERating.review.ordinal()])
                             .reviewDate((Date) o[ERating.review_date.ordinal()])
@@ -177,5 +179,31 @@ public final class RatingService extends EntityService {
             );
         }
         return productList;
+    }
+
+    public List<Rating> getProductReview(String idProduct) {
+        cs.clear();
+        cs.addCriterion(ERating.id_product_fk, idProduct);
+        @SuppressWarnings("unchecked")
+        List<Rating> ratings = (List<Rating>) select(cs.getCriterionList());
+        return ratings;
+    }
+
+    public boolean isThere(AuthorizedUser user, Product product) {
+        cs.clear();
+        cs.addCriterion(ERating.id_user_fk, user.getId());
+        cs.addCriterion(ERating.id_product_fk, product.getId());
+        return select(cs.getCriterionList()).size() > 0;
+    }
+
+    public void update(AuthorizedUser user, Product product, String review) {
+        if (isThere(user, product)) {
+            cs.clear();
+            cs.addCriterion(ERating.id_user_fk, user.getId());
+            cs.addCriterion(ERating.id_product_fk, product.getId());
+            Rating rating = (Rating) select(cs.getCriterionList()).get(0);
+            rating.setReview(review);
+            update(rating);
+        }
     }
 }

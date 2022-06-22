@@ -85,7 +85,7 @@
             flex-direction: column;
             text-align: center;
             height: 60%;
-            width: 130px;
+            margin-right: 40px;
             margin-left: 5px;
             background-color: #009800;
             color: white;
@@ -103,7 +103,7 @@
         }
 
         .button-bar div:nth-of-type(4){
-            margin-left: 25px;
+            margin-left: 20px;
             font-weight: bold;
         }
 

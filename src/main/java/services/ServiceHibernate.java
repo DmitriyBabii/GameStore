@@ -16,12 +16,13 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ServiceHibernate {
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     private static Session session;
 
-    private static CriterionService criterionService = new CriterionService();
+    private static final CriterionService criterionService = new CriterionService();
 
     private ServiceHibernate() {
 
@@ -173,11 +174,20 @@ public class ServiceHibernate {
         }
     }
 
-    public static void setProductCriterion(String id) {
+    public static List<Criterion> getProductCriterion(String id) {
         criterionService.clear();
         if (id != null) {
             criterionService.addCriterion(EProduct.id_product, Operator.EQUALS, id);
         }
+        return criterionService.getCriterionList();
+    }
+
+    public static List<Criterion> getReviewCriterion(String id) {
+        criterionService.clear();
+        if (id != null) {
+            criterionService.addCriterion(ERating.id_product_fk, Operator.EQUALS, id);
+        }
+        return criterionService.getCriterionList();
     }
 
     public static List<Criterion> getUserLoginCriterion(String username, String password) {
@@ -190,7 +200,6 @@ public class ServiceHibernate {
     }
 
     public static List<Criterion> getCriterion() {
-        System.out.println(criterionService.getCriterionList());
         return criterionService.getCriterionList();
     }
 }

@@ -2,6 +2,7 @@ package services.servlets;
 
 import models.SystemUser;
 import models.figures.AuthorizedUser;
+import services.CartService;
 import services.ServiceHibernate;
 import services.entity.UserService;
 
@@ -45,9 +46,11 @@ public class LoginServlet extends HttpServlet {
 
         if (user.isPresent()) {
             SystemUser.init(user.get(), req.getSession());
+            CartService.init(SystemUser.getUser());
             doGet(req, resp);
-        }else{
+        } else {
             SystemUser.exit();
+            CartService.exit();
             req.setAttribute("account", "Log in");
             req.setAttribute("color", "red");
             req.setAttribute("data", "Incorrect data");

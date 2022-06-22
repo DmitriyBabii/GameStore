@@ -4,6 +4,7 @@ import intarfaces.Entity;
 import models.Criterion;
 import models.Product;
 import models.enums.EProduct;
+import services.CriterionService;
 import services.ParseAgeLimit;
 import services.ServiceHibernate;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ProductService extends EntityService {
+    private static final CriterionService cs = new CriterionService();
 
     @Override
     public void createTable() {
@@ -162,5 +164,13 @@ public final class ProductService extends EntityService {
             );
         }
         return productList;
+    }
+
+    public Product getProduct(String id) {
+        cs.clear();
+        cs.addCriterion(EProduct.id_product, id);
+        @SuppressWarnings("unchecked")
+        List<Product> products = (List<Product>) select(cs.getCriterionList());
+        return products.size() != 0 ? products.get(0) : null;
     }
 }

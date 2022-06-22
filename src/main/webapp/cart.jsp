@@ -1,3 +1,13 @@
+<%@ page import="services.CriterionService"%>
+<%@ page import="models.enums.*"%>
+<%@ page import="java.util.List"%>
+<%@ page import="services.entity.*"%>
+<%@ page import="intarfaces.Entity"%>
+<%@ page import="models.*"%>
+<%@ page import="services.servlets.StoreServlet"%>
+<%@ page import="services.ServiceHibernate"%>
+<%@ page import="services.CartService"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,34 +79,34 @@
         margin-right: 3%;
     }
 
-    .button-bar div{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        text-align: center;
-        height: 60%;
-        width: 130px;
-        margin-left: 5px;
-        background-color: #009800;
-        color: white;
-        font-size: 22px;
-        font-family: Helvetica;
-        border: 0;
-    }
+            .button-bar div{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                text-align: center;
+                height: 60%;
+                margin-right: 40px;
+                margin-left: 5px;
+                background-color: #009800;
+                color: white;
+                font-size: 22px;
+                font-family: Helvetica;
+                border: 0;
+            }
 
-    .button-bar div a{
+            .button-bar div a{
 
-        width: 100%;
-        color: white;
-        text-decoration: none;
-        border: none;
-    }
+                width: 100%;
+                color: white;
+                text-decoration: none;
+                border: none;
+            }
 
-    .button-bar div:nth-of-type(4){
-        margin-left: 25px;
-        font-weight: bold;
-    }
+            .button-bar div:nth-of-type(4){
+                margin-left: 20px;
+                font-weight: bold;
+            }
 
     .button-bar div::after{
         display: block;
@@ -153,8 +163,7 @@
     }
 
     .game-name{
-        margin-top: 10px;
-        margin-bottom: 0;
+        margin: 0;
         text-align: center;
     }
 
@@ -321,6 +330,75 @@
         text-decoration: none;
         border: none;
     }
+
+    .text-block{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .text-block p{
+        margin-left: 1px;
+        text-align: center;
+        font-size: 20px;
+        font-family: 'Helvetica';
+    }
+
+    .cart-console{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .cart-console form{
+        width: 100%;
+    }
+
+    .cart-console form button{
+            color: white;
+            height: 40px;
+            width: 100%;
+            background-color: #009800;
+            border-radius: 5px;
+            border: 0;
+    }
+
+    .clear-cart{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 3px;
+            color: black;
+            text-decoration: none;
+            font-size: 14px;
+            color: white;
+            height: 40px;
+            width: 95%;
+            background-color: #009800;
+            border-radius: 5px;
+            border: 0;
+    }
+
+    .clear-cart:hover{
+      background-color: #17B117;
+        }
+
+    .cart-console form button:hover{
+            background-color: #17B117;
+    }
+
+    .empty-box{
+        display: flex;
+        justify-content: center;
+        height: 400px;
+        width: 100%
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        font-family: 'Helvetica';
+    }
         </style>
 </head>
 <body>
@@ -329,61 +407,42 @@
             <form class="search-bar" action="/game-store/store">
                 <input class="search" name="game" type="text" placeholder="    Search">
             </form>
-            <div class="button-bar">
-                <div class="nav-button"><a href="store">Store</a></div>
-                <div class="nav-button"><a href="cart">Cart</a></div>
+            <div class="button-bar"><div class="nav-button">
+            <a href="store">Store</a></div><div class="nav-button"><a href="cart">Cart</a></div>
                 <div class="nav-button"><a href="order">Orders</a></div>
-                <div class="nav-button"><a href="login">${account}</a></div>
-            </div>
+                            <div class="nav-button"><a href="login">${account}</a></div>
+           </div>
         </div>
     </nav>
     <div class="content-box">
         <h1 class="chapter">Cart</h1>
         <div class="cart">
-            <a class="cart-game" href="#">
-                <img src="img/The_Quarry.jpg" alt="The Guarry">
-                <div class="text-block">
-                    <h2 class="game-name">The Guarry</h2>
-                </div>
-            </a>
-            <a class="cart-game" href="#">
-                <img src="img/The_Quarry.jpg" alt="The Guarry">
-                <div class="text-block">
-                    <h2 class="game-name">The Guarry</h2>
-                </div>
-            </a>
-            <a class="cart-game" href="#">
-                <img src="img/The_Quarry.jpg" alt="The Guarry">
-                <div class="text-block">
-                    <h2 class="game-name">The Guarry</h2>
-                </div>
-            </a>
-            <a class="cart-game" href="#">
-                <img src="img/The_Quarry.jpg" alt="The Guarry">
-                <div class="text-block">
-                    <h2 class="game-name">The Guarry</h2>
-                </div>
-            </a>
-            <a class="cart-game" href="#">
-                <img src="img/The_Quarry.jpg" alt="The Guarry">
-                <div class="text-block">
-                    <h2 class="game-name">The Guarry</h2>
-                </div>
-            </a>
-            <a class="cart-game" href="#">
-                <img src="img/The_Quarry.jpg" alt="The Guarry">
-                <div class="text-block">
-                    <h2 class="game-name">The Guarry</h2>
-                </div>
-            </a>
-            <a class="cart-game" href="#">
-                <img src="img/The_Quarry.jpg" alt="The Guarry">
-                <div class="text-block">
-                    <h2 class="game-name">The Guarry</h2>
-                </div>
-            </a>
+            <%
+                if(CartService.getCart()!=null){
+                    for(Product p : CartService.getCart().getProductList()){
+                        out.print("<a class='cart-game' href='product?game=" + p.getId() + "'>");
+                        out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
+                        out.print("<div class='text-block'>");
+                        out.print("<h2 class='game-name'>" + p.getName() + "</h2>");
+                        out.print("<p>" + p.getDateOfRelease() + "</p>");
+                        out.print("<p>" + p.getAgeLimit() + "</p>");
+                        out.print("<p>" + p.getPrice() + "$</p>");
+                        out.print("</div></a>");
+                    }
+                }
+            %>
         </div>
-        </div>
+
+        <%
+                        if(CartService.getCart().getProductList().size() > 0){
+                            out.print("<div class='cart-console'>");
+                            out.print("<form><a class='clear-cart' type='submit' href='cart?delete=all'>Clear cart</a></form>");
+                            out.print("<form  method='post'><button class='create-order' type='submit'>Create order</button></form>");
+                            out.print("</div>");
+                        }else{
+                            out.print("<div class='empty-box'>Empty</div>");
+                        }
+                        %>
     </div>
     <footer class="footer-box">
             <a href="https://www.youtube.com/watch?v=Nj6aM9ljdQU">@Copyright my work</a>

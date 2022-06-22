@@ -11,6 +11,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class Product implements Entity {
     private final String id;
     private final String name;

@@ -70,34 +70,34 @@ input, input::placeholder{
     margin-right: 3%;
 }
 
-.button-bar div{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    height: 60%;
-    width: 130px;
-    margin-left: 5px;
-    background-color: #009800;
-    color: white;
-    font-size: 22px;
-    font-family: Helvetica;
-    border: 0;
-}
+        .button-bar div{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            height: 60%;
+            margin-right: 40px;
+            margin-left: 5px;
+            background-color: #009800;
+            color: white;
+            font-size: 22px;
+            font-family: Helvetica;
+            border: 0;
+        }
 
-.button-bar div a{
+        .button-bar div a{
 
-    width: 100%;
-    color: white;
-    text-decoration: none;
-    border: none;
-}
+            width: 100%;
+            color: white;
+            text-decoration: none;
+            border: none;
+        }
 
-.button-bar div:nth-of-type(4){
-    margin-left: 25px;
-    font-weight: bold;
-}
+        .button-bar div:nth-of-type(4){
+            margin-left: 20px;
+            font-weight: bold;
+        }
 
 .button-bar div::after{
     display: block;
@@ -284,6 +284,10 @@ input, input::placeholder{
     font-family: 'Helvetica';
     font-size: 18px;
     border: none;
+}
+
+.fill-button:hover{
+    background-color: #17B117;
 }
 
 #password{

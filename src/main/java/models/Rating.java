@@ -4,6 +4,7 @@ import intarfaces.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import models.figures.AuthorizedUser;
 import models.figures.Client;
 
 import java.sql.Date;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Rating implements Entity {
-    private final Client client;
+    private final AuthorizedUser client;
     private final Product product;
     private String review;
     private Date reviewDate;

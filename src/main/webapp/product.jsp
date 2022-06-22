@@ -6,6 +6,7 @@
 <%@ page import="models.*"%>
 <%@ page import="services.servlets.StoreServlet"%>
 <%@ page import="services.ServiceHibernate"%>
+<%@ page import="models.Rating"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,34 +78,34 @@ input, input::placeholder{
     margin-right: 3%;
 }
 
-.button-bar div{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    height: 60%;
-    width: 130px;
-    margin-left: 5px;
-    background-color: #009800;
-    color: white;
-    font-size: 22px;
-    font-family: Helvetica;
-    border: 0;
-}
+        .button-bar div{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            height: 60%;
+            margin-right: 40px;
+            margin-left: 5px;
+            background-color: #009800;
+            color: white;
+            font-size: 22px;
+            font-family: Helvetica;
+            border: 0;
+        }
 
-.button-bar div a{
+        .button-bar div a{
 
-    width: 100%;
-    color: white;
-    text-decoration: none;
-    border: none;
-}
+            width: 100%;
+            color: white;
+            text-decoration: none;
+            border: none;
+        }
 
-.button-bar div:nth-of-type(4){
-    margin-left: 25px;
-    font-weight: bold;
-}
+        .button-bar div:nth-of-type(4){
+            margin-left: 20px;
+            font-weight: bold;
+        }
 
 .button-bar div::after{
     display: block;
@@ -136,6 +137,7 @@ input, input::placeholder{
     font-family: 'Trebuchet MS';
     margin-top: 50px;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .chapter::after{
@@ -193,11 +195,12 @@ input, input::placeholder{
     width: 100%;
     margin-left: 25px;
     text-align: center;
-    font-family: 'Trebuchet MS';
+    font-family: 'Helvetica';
 }
 
 .text-block p{
     text-align: justify;
+    margin: 10px;
     font-size: 20px;
 }
 
@@ -218,11 +221,15 @@ input, input::placeholder{
     width: 100%;
     background-color: ${color};
     border-radius: 3px;
-    color: white;
+    color: ${text};
     text-decoration: none;
     font-family: 'Helvetica';
     font-size: 18px;
-    border: none;
+    border: 2px solid #009800;
+}
+
+.to-cart:hover{
+    background-color: #17B117;
 }
 
 .cart-game{
@@ -355,6 +362,62 @@ input, input::placeholder{
     text-decoration: none;
     border: none;
 }
+
+.review-block{
+    border-top: 1px solid #009800;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.user{
+    font-weight: bold;
+    margin-left: 50px;
+    margin-bottom: 5px;
+}
+
+.review{
+    margin: 30px;
+    margin-top:10px;
+    font-size: 20px;
+}
+
+.date{
+    color: #798C79;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.user, .review, .date{
+    font-family: 'Helvetica';
+}
+
+.create-review{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 3px;
+            color: black;
+            text-decoration: none;
+            font-size: 20px;
+            font-family: 'Helvetica';
+            color: white;
+            height: 40px;
+            width: 100%;
+            background-color: #009800;
+            border-radius: 5px;
+            border: 0;
+    }
+
+    .review-bar{
+        height: 250px
+    }
+
+    .review-text{
+        height: 90%;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
     </style>
 </head>
 <body>
@@ -375,25 +438,48 @@ input, input::placeholder{
         <h1 class="chapter">Product</h1>
         <div class="store">
         <%
-            ProductService productService = new ProductService();
-            List<? extends Entity> list = productService.select(ServiceHibernate.getCriterion());
+            Product product =(Product) request.getAttribute("product");
 
-            for(Entity e: list){
-            Product product = (Product) e;
-                out.print("<div class='store-game'><div class='image'>");
-                out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='"+product.getName()+"'>");
-                out.print("<form  method='post'><button class='to-cart' name='tocart' type='submit'>To cart</button></form></div>");
-                out.print("<div class='text-block'>");
-                out.print("<h2 class='game-name'>" + product.getName() + "</h2>");
-                out.print("</a>");
-                out.print("<p class='description'>");
-                out.print(product.getDescription());
-                out.print("</p></div>");
-            }
+            out.print("<div class='store-game'><div class='image'>");
+            out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='"+product.getName()+"'>");
+            out.print("<form  method='post'><button class='to-cart' name='to-cart' type='submit'>" + product.getPrice() + "$</button></form></div>");
+            out.print("<div class='text-block'>");
+            out.print("<h2 class='game-name'>" + product.getName() + "</h2>");
+            out.print("<p class='game-date'><b><i>Date of release:</i></b> " + product.getDateOfRelease() + "</p>");
+            out.print("<p class='game-age-limit'><b><i>Age limit:</i></b> " + product.getAgeLimit() + "+</p>");
+            out.print("<p class='description'>");
+            out.print(product.getDescription());
+            out.print("</p></div>");
         %>
-
+            </div>
 
             </div>
+
+            <%
+                List<? extends Entity> ratings = (List<? extends Entity>) request.getAttribute("review");
+
+                if(ratings.size() > 0){
+                    out.print("<h2 class='chapter'>Review</h2>");
+                }
+
+                for(Entity r: ratings){
+                Rating rating = (Rating) r;
+                    out.print("<div class='review-block'>");
+                    out.print("<div class='text-block'>");
+                    out.print("<h2 class='user'>" + rating.getClient().getUsername() + "<h2>");
+                    out.print("<div class='review'>" + rating.getReview() + "</div>");
+                    out.print("<div class='date'>" + rating.getReviewDate() + "</div>");
+                    out.print("</div></div>");
+                }
+            %>
+            <%
+            if(SystemUser.isPresent()){
+                out.print("<h2 class='chapter'>Leave review</h2>");
+                out.print("<form class='review-bar'>");
+                out.print("<input class='review-text' name='review' type='text' placeholder='    Leave a review'>");
+                out.print("</form>");
+            }
+            %>
         </div>
     </div>
     <footer class="footer-box">
