@@ -441,7 +441,7 @@ input, input::placeholder{
             Product product =(Product) request.getAttribute("product");
 
             out.print("<div class='store-game'><div class='image'>");
-            out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='"+product.getName()+"'>");
+            out.print("<img src='"+product.getPicture()+"' alt='"+product.getName()+"'>");
             out.print("<form  method='post'><button class='to-cart' name='to-cart' type='submit'>" + product.getPrice() + "$</button></form></div>");
             out.print("<div class='text-block'>");
             out.print("<h2 class='game-name'>" + product.getName() + "</h2>");

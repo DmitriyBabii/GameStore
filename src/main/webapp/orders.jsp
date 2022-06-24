@@ -167,7 +167,7 @@
         text-align: center;
     }
 
-    .store-game, .cart-game{
+    .store-game, .cart-game, .cart-game-complete{
         color: black;
         text-decoration: none;
         border: none;
@@ -210,6 +210,7 @@
         border-radius: 5px;
     }
 
+
     .cart-game img{
         height: 100px;
         border-radius: 5px;
@@ -220,6 +221,30 @@
     }
 
     .cart-game h2{
+        font-family: 'Trebuchet MS';
+        margin-left: 15px;
+    }
+
+    .cart-game-complete{
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin: 30px;
+        margin-left: 0;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        color: #009800;
+    }
+
+    .cart-game-complete img{
+        height: 100px;
+        border-radius: 5px;
+    }
+
+     .cart-game-complete:hover{
+        background-color: #B8EAA8;
+     }
+    .cart-game-complete h2{
         font-family: 'Trebuchet MS';
         margin-left: 15px;
     }
@@ -422,12 +447,12 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 30px;
-        margin-bottom: 35px;
+        height: 35px;
+        margin-bottom: 50px;
     }
 
     .accept-bar a{
-        padding-top: 5px;
+        padding-top: 8px;
         height: 100%;
         width: ${button};
         text-align: center;
@@ -465,15 +490,16 @@
                             List<Order> list = (List<Order>) request.getAttribute("orders");
                             if(list!=null){
                             for(Order order: list){
-                                out.print("<a class='cart-game' href='order?order=" + order.getId() + "'>");
-                                out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
+                                out.print("<a class='"+((order.getEndDateCourier() == null)?"cart-game":"cart-game-complete")
+                                + "' href='order?order=" + order.getId() + "'>");
+                                out.print("<img src='"+order.getProducts().get(0).getPicture()+"'>");
                                 out.print("<div class='text-block'>");
                                 out.print("<h2 class='game-name'>" + order.getId() + "</h2>");
                                 out.print("<p>" + order.getStartOrder() + "</p>");
                                 out.print("<p>" + order.getPrice() + "$</p>");
                                 out.print("</div></a>");
 
-                                if(order.getEndDateCourier() == null){
+                                if(order.getEndDateCourier() == null && !order.getCancel()){
                                     out.print("<form class='accept-bar'><a href='order?cancel=" + order.getId() + "'>Cancel</a>");
                                 }
                                 if (SystemUser.getUser().getElementRole() == Role.CLIENT){

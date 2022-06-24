@@ -8,6 +8,7 @@ public enum EProduct implements EntityEnum {
     id_product("CREATE TABLE IF NOT EXISTS game_shop.product (\n"
             + "id_product", MySQLType.ID, MySQLAttribute.NOT_NULL),
     name("name", MySQLType.MIDDLE_STRING, MySQLAttribute.NOT_NULL, MySQLAttribute.UNIQUE),
+    picture("picture", MySQLType.LONG_STRING, MySQLAttribute.NOT_NULL),
     date_of_release("date_of_release", MySQLType.DATE, MySQLAttribute.NOT_NULL),
     destination("destination", MySQLType.LONG_STRING, MySQLAttribute.NOT_NULL),
     age_limit("age_limit", MySQLType.INT, MySQLAttribute.NOT_NULL),

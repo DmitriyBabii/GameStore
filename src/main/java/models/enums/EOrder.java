@@ -13,6 +13,7 @@ public enum EOrder implements EntityEnum {
     id_user_storekeeper_fk("id_user_storekeeper_fk", MySQLType.ID),
     id_user_courier_fk("id_user_courier_fk", MySQLType.ID),
     price("price", MySQLType.DOUBLE, MySQLAttribute.NOT_NULL),
+    cancel("cancel", MySQLType.TINYINT, MySQLAttribute.NOT_NULL),
     start_date("start_date", MySQLType.DATE, MySQLAttribute.NOT_NULL),
     end_date_manager("end_date_manager", MySQLType.DATE),
     end_date_storekeeper("end_date_storekeeper", MySQLType.DATE),

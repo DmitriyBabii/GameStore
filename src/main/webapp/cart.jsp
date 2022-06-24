@@ -340,7 +340,7 @@
     }
 
     .text-block p{
-        margin-left: 1px;
+        margin-left: 10px;
         text-align: center;
         font-size: 20px;
         font-family: 'Helvetica';
@@ -438,7 +438,7 @@
                 if(CartService.getCart()!=null){
                     for(Product p : CartService.getCart().getProductList()){
                         out.print("<a class='cart-game' href='product?game=" + p.getId() + "'>");
-                        out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
+                        out.print("<img src='"+p.getPicture()+"' alt='The Guarry'>");
                         out.print("<div class='text-block'>");
                         out.print("<h2 class='game-name'>" + p.getName() + "</h2>");
                         out.print("<p>" + p.getDateOfRelease() + "</p>");

@@ -19,6 +19,14 @@ import java.util.Optional;
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String exit = req.getParameter("exit");
+
+        if(exit!=null){
+            SystemUser.exit();
+            resp.sendRedirect("/game-store/login");
+            return;
+        }
+
         if (SystemUser.isPresent()) {
             String account = SystemUser.getUser().getUsername()
                     + "(" + SystemUser.getUser().getRole().charAt(0)

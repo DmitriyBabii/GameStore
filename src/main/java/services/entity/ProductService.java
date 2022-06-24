@@ -5,6 +5,7 @@ import models.Criterion;
 import models.Product;
 import models.enums.EProduct;
 import models.enums.Operator;
+import models.enums.OrderBy;
 import services.CriterionService;
 import services.ParseAgeLimit;
 import services.ServiceHibernate;
@@ -37,6 +38,7 @@ public final class ProductService extends EntityService {
             ServiceHibernate.getSession().createSQLQuery(getInsertQuery())
                     .setParameter(EProduct.id_product.toString(), product.getId())
                     .setParameter(EProduct.name.toString(), product.getName())
+                    .setParameter(EProduct.picture.toString(), product.getPicture())
                     .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
                     .setParameter(EProduct.destination.toString(), product.getDescription())
                     .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
@@ -54,6 +56,7 @@ public final class ProductService extends EntityService {
             ServiceHibernate.getSession().createSQLQuery(getUpdateQuery())
                     .setParameter(EProduct.id_product.toString(), product.getId())
                     .setParameter(EProduct.name.toString(), product.getName())
+                    .setParameter(EProduct.picture.toString(), product.getPicture())
                     .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
                     .setParameter(EProduct.destination.toString(), product.getDescription())
                     .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
@@ -157,6 +160,7 @@ public final class ProductService extends EntityService {
                     Product.builder()
                             .id((String) o[EProduct.id_product.ordinal()])
                             .name((String) o[EProduct.name.ordinal()])
+                            .picture((String) o[EProduct.picture.ordinal()])
                             .dateOfRelease((Date) o[EProduct.date_of_release.ordinal()])
                             .description((String) o[EProduct.destination.ordinal()])
                             .ageLimit(ParseAgeLimit.getAgeLimit((Integer) o[EProduct.age_limit.ordinal()]))
@@ -175,20 +179,13 @@ public final class ProductService extends EntityService {
         return products.size() != 0 ? products.get(0) : null;
     }
 
-    public List<Product> getProducts() {
-        cs.clear();
-        @SuppressWarnings("unchecked")
-        List<Product> products = (List<Product>) select(cs.getCriterionList());
-        return products;
-    }
-
     public List<Product> getProducts(String name) {
         cs.clear();
         if (name != null) {
             cs.addCriterion(EProduct.name, Operator.LIKE, "%" + name + "%");
         }
         @SuppressWarnings("unchecked")
-        List<Product> products = (List<Product>) select(cs.getCriterionList());
+        List<Product> products = (List<Product>) select(cs.getCriterionList(), EProduct.price, OrderBy.DESC);
         return products;
     }
 }

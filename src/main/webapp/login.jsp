@@ -357,7 +357,7 @@ input, input::placeholder{
                     <input name="username" class="fill" type="text" placeholder="   Username">
                     <input id="password" name="password" class="fill" type="text" placeholder="   Password">
                     <button class="fill-button" type="submit">Confirm</button>
-                    <a class="register-button" href="#">Registration</a>
+                    <a class="register-button" href="login?exit=true">Exit</a>
                 </form>
             </div>
         </div>

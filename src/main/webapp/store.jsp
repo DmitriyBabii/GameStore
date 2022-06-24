@@ -235,7 +235,7 @@
 
             for(Product product: list){
                 out.print("<a class='store-game' href='product?game=" + product.getId() + "'>");
-                out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
+                out.print("<img src='"+product.getPicture()+"'>");
                 out.print("<div class='text-block'>");
                 out.print("<h2 class='game-name'>" + product.getName() + "</h2>");
                 out.print("</div></a>");

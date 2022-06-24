@@ -29,6 +29,7 @@ public class Order implements Entity {
     private Date endDateManager;
     private Date endDateStorekeeper;
     private Date endDateCourier;
+    private Boolean cancel;
 
 
     public Order(Client client, List<Product> products) {
@@ -41,6 +42,7 @@ public class Order implements Entity {
         }
         this.price = sum;
         this.startOrder = Date.valueOf(LocalDate.now());
+        this.cancel = false;
     }
 
     public Order(Manager manager, Storekeeper storekeeper, Courier courier, Client client,
@@ -55,6 +57,7 @@ public class Order implements Entity {
         this.startOrder = startOrder;
         this.endDateStorekeeper = null;
         this.endDateCourier = null;
+        this.cancel = false;
     }
 
     /**
@@ -63,7 +66,7 @@ public class Order implements Entity {
     @SuppressWarnings("unused")
     public Order(String id, Manager manager, Storekeeper storekeeper, Courier courier,
                  Client client, List<Product> products, Double price, Date startOrder,
-                 Date endDateManager, Date endDateStorekeeper, Date endDateCourier) {
+                 Date endDateManager, Date endDateStorekeeper, Date endDateCourier, Boolean cancel) {
         this.id = id;
         this.manager = manager;
         this.storekeeper = storekeeper;
@@ -75,6 +78,7 @@ public class Order implements Entity {
         this.endDateManager = endDateManager;
         this.endDateStorekeeper = endDateStorekeeper;
         this.endDateCourier = endDateCourier;
+        this.cancel = cancel;
     }
 
     public void addProduct(Product... product) {

@@ -448,7 +448,7 @@
                             if(list!=null){
                             for(Product p: list){
                                 out.print("<a class='cart-game' href='product?game=" + p.getId() + "'>");
-                                out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
+                                out.print("<img src='"+p.getPicture()+"' alt='The Guarry'>");
                                 out.print("<div class='text-block'>");
                                 out.print("<h2 class='game-name'>" + p.getName() + "</h2>");
                                 out.print("<p>" + p.getDateOfRelease() + "</p>");
@@ -472,6 +472,7 @@
                     out.print("<div class='process'>Delivered by delivery service</div>");
                     out.print("<div class='process'>Order completed</div>");
                 }
+                out.print(order.getCancel()?"<div class='process'>Canceled</div>":"");
             }
 
 

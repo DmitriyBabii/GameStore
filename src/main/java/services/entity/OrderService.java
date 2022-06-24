@@ -1,6 +1,7 @@
 package services.entity;
 
 import intarfaces.Entity;
+import intarfaces.EntityEnum;
 import models.Criterion;
 import models.Order;
 import models.Product;
@@ -56,6 +57,7 @@ public final class OrderService extends EntityService {
                     .setParameter(EOrder.id_user_courier_fk.toString(), (courier != null) ? courier.getId() : null)
                     .setParameter(EOrder.id_user_client_fk.toString(), order.getClient().getId())
                     .setParameter(EOrder.price.toString(), order.getPrice())
+                    .setParameter(EOrder.cancel.toString(), order.getCancel())
                     .setParameter(EOrder.start_date.toString(), order.getStartOrder())
                     .setParameter(EOrder.end_date_manager.toString(), order.getEndDateManager())
                     .setParameter(EOrder.end_date_storekeeper.toString(), order.getEndDateStorekeeper())
@@ -90,6 +92,7 @@ public final class OrderService extends EntityService {
                     .setParameter(EOrder.id_user_courier_fk.toString(), (courier != null) ? courier.getId() : null)
                     .setParameter(EOrder.id_user_client_fk.toString(), order.getClient().getId())
                     .setParameter(EOrder.price.toString(), order.getPrice())
+                    .setParameter(EOrder.cancel.toString(), order.getCancel())
                     .setParameter(EOrder.start_date.toString(), order.getStartOrder())
                     .setParameter(EOrder.end_date_manager.toString(), order.getEndDateManager())
                     .setParameter(EOrder.end_date_storekeeper.toString(), order.getEndDateStorekeeper())
@@ -221,16 +224,6 @@ public final class OrderService extends EntityService {
         return sb.toString();
     }
 
-    @Override
-    protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.order");
-        if (criterionList.size() == 0) {
-            return sb.toString();
-        }
-        sb.append(" WHERE ");
-        return useCriterion(sb, criterionList);
-    }
-
     protected String getSelectQueryForProducts(List<Criterion> criterionList) {
         StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.product_in_order");
         if (criterionList.size() == 0) {
@@ -278,6 +271,7 @@ public final class OrderService extends EntityService {
                             .courier(courier)
                             .price((Double) o[EOrder.price.ordinal()])
                             .products(selectProducts((String) o[EOrder.id_order.ordinal()]))
+                            .cancel((Byte) o[EOrder.cancel.ordinal()] != 0)
                             .startOrder((Date) o[EOrder.start_date.ordinal()])
                             .endDateManager((Date) o[EOrder.end_date_manager.ordinal()])
                             .endDateStorekeeper((Date) o[EOrder.end_date_storekeeper.ordinal()])
@@ -307,6 +301,16 @@ public final class OrderService extends EntityService {
         return getEntityProduct(resultList);
     }
 
+    @Override
+    protected String getSelectQuery(List<Criterion> criterionList) {
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.order");
+        if (criterionList.size() == 0) {
+            return sb.toString();
+        }
+        sb.append(" WHERE ");
+        return useCriterion(sb, criterionList);
+    }
+
     private List<Product> getEntityProduct(List<Object[]> resultList) {
         ProductService ps = new ProductService();
         CriterionService cProduct = new CriterionService();
@@ -324,7 +328,7 @@ public final class OrderService extends EntityService {
         cs.clear();
         cs.addCriterion(EOrder.id_user_client_fk, id);
         @SuppressWarnings("unchecked")
-        List<Order> orders = (List<Order>) select(cs.getCriterionList());
+        List<Order> orders = (List<Order>) select(cs.getCriterionList(), EOrder.end_date_courier, OrderBy.ASC);
         return orders;
     }
 
@@ -333,6 +337,7 @@ public final class OrderService extends EntityService {
         cs.addCriterion(EOrder.end_date_manager, Operator.IS_NULL, null);
         cs.addCriterion(EOrder.end_date_storekeeper, Operator.IS_NULL, null);
         cs.addCriterion(EOrder.end_date_courier, Operator.IS_NULL, null);
+        cs.addCriterion(EOrder.cancel, Operator.EQUALS, 0);
         @SuppressWarnings("unchecked")
         List<Order> orders = (List<Order>) select(cs.getCriterionList());
         return orders;
@@ -343,6 +348,7 @@ public final class OrderService extends EntityService {
         cs.addCriterion(EOrder.end_date_manager, Operator.NOT_NULL, null);
         cs.addCriterion(EOrder.end_date_storekeeper, Operator.IS_NULL, null);
         cs.addCriterion(EOrder.end_date_courier, Operator.IS_NULL, null);
+        cs.addCriterion(EOrder.cancel, Operator.EQUALS, 0);
         @SuppressWarnings("unchecked")
         List<Order> orders = (List<Order>) select(cs.getCriterionList());
         return orders;
@@ -353,6 +359,7 @@ public final class OrderService extends EntityService {
         cs.addCriterion(EOrder.end_date_manager, Operator.NOT_NULL, null);
         cs.addCriterion(EOrder.end_date_storekeeper, Operator.NOT_NULL, null);
         cs.addCriterion(EOrder.end_date_courier, Operator.IS_NULL, null);
+        cs.addCriterion(EOrder.cancel, Operator.EQUALS, 0);
 
         @SuppressWarnings("unchecked")
         List<Order> orders = (List<Order>) select(cs.getCriterionList());

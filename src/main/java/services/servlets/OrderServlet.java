@@ -26,6 +26,7 @@ public class OrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idOrder = req.getParameter("order");
         String accept = req.getParameter("accept");
+        String cancel = req.getParameter("cancel");
 
         if (SystemUser.isPresent()) {
             String account = SystemUser.getUser().getUsername()
@@ -50,6 +51,10 @@ public class OrderServlet extends HttpServlet {
             }
             if (accept != null) {
                 setAccept(accept, resp);
+                return;
+            }
+            if (cancel != null) {
+                setCancel(cancel, resp);
                 return;
             }
         }
@@ -97,7 +102,9 @@ public class OrderServlet extends HttpServlet {
 
     private void setAccept(String accept, HttpServletResponse resp) throws IOException {
         Order order = os.getOrder(accept);
-        if (order == null) return;
+        if (order == null) {
+            return;
+        }
         switch (SystemUser.getUser().getElementRole()) {
             case MANAGER: {
                 order.setManager((Manager) SystemUser.getUser());
@@ -117,6 +124,16 @@ public class OrderServlet extends HttpServlet {
             default:
                 return;
         }
+        os.update(order);
+        resp.sendRedirect("/game-store/order");
+    }
+
+    private void setCancel(String cancel, HttpServletResponse resp) throws IOException {
+        Order order = os.getOrder(cancel);
+        if (order == null) {
+            return;
+        }
+        order.setCancel(true);
         os.update(order);
         resp.sendRedirect("/game-store/order");
     }
