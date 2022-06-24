@@ -23,6 +23,7 @@ public class LoginServlet extends HttpServlet {
 
         if(exit!=null){
             SystemUser.exit();
+            CartService.exit();
             resp.sendRedirect("/game-store/login");
             return;
         }

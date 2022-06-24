@@ -327,9 +327,27 @@ public final class OrderService extends EntityService {
     public List<Order> getOrdersForUser(String id) {
         cs.clear();
         cs.addCriterion(EOrder.id_user_client_fk, id);
+        return selectForUser(cs.getCriterionList());
+    }
+
+    private List<Order> selectForUser(List<Criterion> criterionList){
+        ServiceHibernate.open();
+        @SuppressWarnings("rawtypes")
+        NativeQuery query = ServiceHibernate.getSession()
+                .createSQLQuery(getSelectQuery(criterionList)
+                        + " ORDER BY " + EOrder.end_date_courier + OrderBy.ASC
+                        + ", " +EOrder.cancel + OrderBy.ASC
+                );
+        for (Criterion criterion : criterionList) {
+            if (criterion.getValue() != null) {
+                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            }
+        }
         @SuppressWarnings("unchecked")
-        List<Order> orders = (List<Order>) select(cs.getCriterionList(), EOrder.end_date_courier, OrderBy.ASC);
-        return orders;
+        List<Object[]> resultList = query.list();
+        ServiceHibernate.close();
+
+        return getEntities(resultList);
     }
 
     public List<Order> getOrdersForManager() {
