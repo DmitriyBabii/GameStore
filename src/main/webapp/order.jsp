@@ -348,12 +348,12 @@
 
     .cart-console{
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         width: 100%;
     }
 
     .cart-console form{
-        width: 49%;
+        width: 100%;
         font-family: 'Helvetica';
     }
 
@@ -369,7 +369,7 @@
     .cart-console form a{
                 color: white;
                 height: 40px;
-                width: 100%;
+                width: 95%;
                 background-color: #009800;
                 border-radius: 5px;
                 border: 0;
@@ -416,6 +416,15 @@
         font-weight: bold;
         font-family: 'Helvetica';
     }
+
+    .process{
+        padding-top: 50px;
+        padding-left: 40px;
+        font-size: 25px;
+        font-family: 'Helvetica';
+        font-weight: bold;
+        border-left: 5px dashed black;
+    }
         </style>
 </head>
 <body>
@@ -432,29 +441,44 @@
         </div>
     </nav>
     <div class="content-box">
-        <h1 class="chapter">Cart</h1>
+        <h1 class="chapter">Order ${idOrder}</h1>
         <div class="cart">
             <%
-                if(CartService.getCart()!=null){
-                    for(Product p : CartService.getCart().getProductList()){
-                        out.print("<a class='cart-game' href='product?game=" + p.getId() + "'>");
-                        out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
-                        out.print("<div class='text-block'>");
-                        out.print("<h2 class='game-name'>" + p.getName() + "</h2>");
-                        out.print("<p>" + p.getDateOfRelease() + "</p>");
-                        out.print("<p>" + p.getAgeLimit() + "</p>");
-                        out.print("<p>" + p.getPrice() + "$</p>");
-                        out.print("</div></a>");
-                    }
-                }
+                            List<Product> list = (List<Product>) request.getAttribute("productsInOrder");
+                            if(list!=null){
+                            for(Product p: list){
+                                out.print("<a class='cart-game' href='product?game=" + p.getId() + "'>");
+                                out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
+                                out.print("<div class='text-block'>");
+                                out.print("<h2 class='game-name'>" + p.getName() + "</h2>");
+                                out.print("<p>" + p.getDateOfRelease() + "</p>");
+                                out.print("<p>" + p.getAgeLimit() + "</p>");
+                                out.print("<p>" + p.getPrice() + "$</p>");
+                                out.print("</div></a>");
+                            }
+                            }
             %>
         </div>
+        <h2 class='chapter'>Process</h2>
+        <div class'process-bar'>
+            <div class='process'>Start order</div>
+            <%
 
-                    <div class='cart-console'>
-                            <form><a class='clear-cart' type='submit' href='cart?delete=all'>Clear cart</a></form>
-                            <form  method='post'><button class='create-order' type='submit'>Create order</button></form>
-                            </div>
-                    </div>
+            Order order = (Order) request.getAttribute("orderEntity");
+            if(order!=null){
+                out.print((order.getEndDateManager()!=null)?"<div class='process'>Accepted by manager</div>":"");
+                out.print((order.getEndDateStorekeeper()!=null)?"<div class='process'>Packed and handed over to the delivery service</div>":"");
+                if(order.getEndDateCourier()!=null){
+                    out.print("<div class='process'>Delivered by delivery service</div>");
+                    out.print("<div class='process'>Order completed</div>");
+                }
+            }
+
+
+            %>
+
+        </div>
+    </div>
     <footer class="footer-box">
             <a href="https://www.youtube.com/watch?v=Nj6aM9ljdQU">@Copyright my work</a>
     </footer>

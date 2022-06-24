@@ -10,7 +10,7 @@ public enum MySQLType {
     DATE(" DATE"),
     SHORT_STRING(" VARCHAR(30)"),
     MIDDLE_STRING(" VARCHAR(100)"),
-    LONG_STRING(" VARCHAR(1000)"),
+    LONG_STRING(" VARCHAR(2000)"),
     PHONE_NUMBER(" VARCHAR(13)");
 
     private final String query;

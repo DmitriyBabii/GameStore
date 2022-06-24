@@ -52,6 +52,10 @@ public abstract class AuthorizedUser extends User implements Entity {
         return role.toString();
     }
 
+    public Role getElementRole() {
+        return role;
+    }
+
     @Override
     public String toString() {
         return "AuthorizedUser{" +

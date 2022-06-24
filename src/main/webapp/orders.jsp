@@ -206,6 +206,7 @@
         width: 100%;
         margin: 30px;
         margin-left: 0;
+        margin-bottom: 10px;
         border-radius: 5px;
     }
 
@@ -348,12 +349,12 @@
 
     .cart-console{
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         width: 100%;
     }
 
     .cart-console form{
-        width: 49%;
+        width: 100%;
         font-family: 'Helvetica';
     }
 
@@ -369,7 +370,7 @@
     .cart-console form a{
                 color: white;
                 height: 40px;
-                width: 100%;
+                width: 95%;
                 background-color: #009800;
                 border-radius: 5px;
                 border: 0;
@@ -416,6 +417,32 @@
         font-weight: bold;
         font-family: 'Helvetica';
     }
+
+    .accept-bar{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 30px;
+        margin-bottom: 35px;
+    }
+
+    .accept-bar a{
+        padding-top: 5px;
+        height: 100%;
+        width: ${button};
+        text-align: center;
+        font-size: 18px;
+        font-family: 'Helvetica';
+        text-decoration: none;
+        color: white;
+        background-color: #009800;
+        border-radius: 5px;
+    }
+
+    .accept-bar a:hover{
+        background-color: #17B117;
+    }
+
         </style>
 </head>
 <body>
@@ -432,29 +459,34 @@
         </div>
     </nav>
     <div class="content-box">
-        <h1 class="chapter">Cart</h1>
+        <h1 class="chapter">Orders</h1>
         <div class="cart">
             <%
-                if(CartService.getCart()!=null){
-                    for(Product p : CartService.getCart().getProductList()){
-                        out.print("<a class='cart-game' href='product?game=" + p.getId() + "'>");
-                        out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
-                        out.print("<div class='text-block'>");
-                        out.print("<h2 class='game-name'>" + p.getName() + "</h2>");
-                        out.print("<p>" + p.getDateOfRelease() + "</p>");
-                        out.print("<p>" + p.getAgeLimit() + "</p>");
-                        out.print("<p>" + p.getPrice() + "$</p>");
-                        out.print("</div></a>");
-                    }
-                }
-            %>
-        </div>
+                            List<Order> list = (List<Order>) request.getAttribute("orders");
+                            if(list!=null){
+                            for(Order order: list){
+                                out.print("<a class='cart-game' href='order?order=" + order.getId() + "'>");
+                                out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
+                                out.print("<div class='text-block'>");
+                                out.print("<h2 class='game-name'>" + order.getId() + "</h2>");
+                                out.print("<p>" + order.getStartOrder() + "</p>");
+                                out.print("<p>" + order.getPrice() + "$</p>");
+                                out.print("</div></a>");
+                                out.print("<form class='accept-bar'><a href='order?cancel=" + order.getId() + "'>Cancel</a>");
 
-                    <div class='cart-console'>
-                            <form><a class='clear-cart' type='submit' href='cart?delete=all'>Clear cart</a></form>
-                            <form  method='post'><button class='create-order' type='submit'>Create order</button></form>
-                            </div>
-                    </div>
+                                if (SystemUser.getUser().getElementRole() == Role.CLIENT){
+                                    out.print("</form>");
+                                } else if (SystemUser.getUser().getElementRole() == Role.MANAGER){
+                                    out.print("<a href='order?accept=" + order.getId() + "'>Accept</a></form>");
+                                } else if (SystemUser.getUser().getElementRole() == Role.STOREKEEPER){
+                                    out.print("<a href='order?accept=" + order.getId() + "'>To wrap up</a></form>");
+                                } else if (SystemUser.getUser().getElementRole() == Role.COURIER){
+                                    out.print("<a href='order?accept=" + order.getId() + "'>Deliver</a></form>");
+                                }
+                            }
+                            }
+                        %>
+        </div></div>
     <footer class="footer-box">
             <a href="https://www.youtube.com/watch?v=Nj6aM9ljdQU">@Copyright my work</a>
     </footer>

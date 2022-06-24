@@ -231,11 +231,9 @@
         <h1 class="chapter">Store</h1>
         <div class="store">
         <%
-            ProductService productService = new ProductService();
-            List<? extends Entity> list = productService.select(ServiceHibernate.getCriterion());
+            List<Product> list = (List<Product>) request.getAttribute("products");
 
-            for(Entity e: list){
-            Product product = (Product) e;
+            for(Product product: list){
                 out.print("<a class='store-game' href='product?game=" + product.getId() + "'>");
                 out.print("<img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='The Guarry'>");
                 out.print("<div class='text-block'>");

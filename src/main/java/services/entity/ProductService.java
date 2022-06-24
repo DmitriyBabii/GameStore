@@ -4,6 +4,7 @@ import intarfaces.Entity;
 import models.Criterion;
 import models.Product;
 import models.enums.EProduct;
+import models.enums.Operator;
 import services.CriterionService;
 import services.ParseAgeLimit;
 import services.ServiceHibernate;
@@ -172,5 +173,22 @@ public final class ProductService extends EntityService {
         @SuppressWarnings("unchecked")
         List<Product> products = (List<Product>) select(cs.getCriterionList());
         return products.size() != 0 ? products.get(0) : null;
+    }
+
+    public List<Product> getProducts() {
+        cs.clear();
+        @SuppressWarnings("unchecked")
+        List<Product> products = (List<Product>) select(cs.getCriterionList());
+        return products;
+    }
+
+    public List<Product> getProducts(String name) {
+        cs.clear();
+        if (name != null) {
+            cs.addCriterion(EProduct.name, Operator.LIKE, "%" + name + "%");
+        }
+        @SuppressWarnings("unchecked")
+        List<Product> products = (List<Product>) select(cs.getCriterionList());
+        return products;
     }
 }

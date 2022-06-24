@@ -4,7 +4,6 @@ import models.Product;
 import models.Rating;
 import models.SystemUser;
 import services.CartService;
-import services.ServiceHibernate;
 import services.entity.ProductService;
 import services.entity.RatingService;
 
@@ -29,7 +28,6 @@ public class ProductServlet extends HttpServlet {
         String review = req.getParameter("review");
 
         if (review != null) {
-            System.out.println(review);
             if (SystemUser.isPresent() && !ratingService.isThere(SystemUser.getUser(), product)) {
                 ratingService.save(new Rating(SystemUser.getUser(), product, review, Date.valueOf(LocalDate.now())));
             } else if (SystemUser.isPresent()) {
@@ -66,7 +64,6 @@ public class ProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!CartService.isThere(product)) {
             CartService.addProduct(product);
-            System.out.println(CartService.getCart());
         }
         doGet(req, resp);
     }
