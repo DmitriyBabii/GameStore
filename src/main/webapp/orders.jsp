@@ -472,8 +472,10 @@
                                 out.print("<p>" + order.getStartOrder() + "</p>");
                                 out.print("<p>" + order.getPrice() + "$</p>");
                                 out.print("</div></a>");
-                                out.print("<form class='accept-bar'><a href='order?cancel=" + order.getId() + "'>Cancel</a>");
 
+                                if(order.getEndDateCourier() == null){
+                                    out.print("<form class='accept-bar'><a href='order?cancel=" + order.getId() + "'>Cancel</a>");
+                                }
                                 if (SystemUser.getUser().getElementRole() == Role.CLIENT){
                                     out.print("</form>");
                                 } else if (SystemUser.getUser().getElementRole() == Role.MANAGER){

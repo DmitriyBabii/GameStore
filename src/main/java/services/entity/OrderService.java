@@ -331,6 +331,8 @@ public final class OrderService extends EntityService {
     public List<Order> getOrdersForManager() {
         cs.clear();
         cs.addCriterion(EOrder.end_date_manager, Operator.IS_NULL, null);
+        cs.addCriterion(EOrder.end_date_storekeeper, Operator.IS_NULL, null);
+        cs.addCriterion(EOrder.end_date_courier, Operator.IS_NULL, null);
         @SuppressWarnings("unchecked")
         List<Order> orders = (List<Order>) select(cs.getCriterionList());
         return orders;
@@ -338,7 +340,9 @@ public final class OrderService extends EntityService {
 
     public List<Order> getOrdersForStorekeeper() {
         cs.clear();
+        cs.addCriterion(EOrder.end_date_manager, Operator.NOT_NULL, null);
         cs.addCriterion(EOrder.end_date_storekeeper, Operator.IS_NULL, null);
+        cs.addCriterion(EOrder.end_date_courier, Operator.IS_NULL, null);
         @SuppressWarnings("unchecked")
         List<Order> orders = (List<Order>) select(cs.getCriterionList());
         return orders;
@@ -346,7 +350,10 @@ public final class OrderService extends EntityService {
 
     public List<Order> getOrdersForCourier() {
         cs.clear();
+        cs.addCriterion(EOrder.end_date_manager, Operator.NOT_NULL, null);
+        cs.addCriterion(EOrder.end_date_storekeeper, Operator.NOT_NULL, null);
         cs.addCriterion(EOrder.end_date_courier, Operator.IS_NULL, null);
+
         @SuppressWarnings("unchecked")
         List<Order> orders = (List<Order>) select(cs.getCriterionList());
         return orders;

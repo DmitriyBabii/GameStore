@@ -6,7 +6,6 @@ import models.enums.Role;
 import models.figures.Courier;
 import models.figures.Manager;
 import models.figures.Storekeeper;
-import services.CartService;
 import services.entity.OrderService;
 
 import javax.servlet.ServletException;
@@ -50,29 +49,7 @@ public class OrderServlet extends HttpServlet {
                 req.getRequestDispatcher("order.jsp").forward(req, resp);
             }
             if (accept != null) {
-                Order order = os.getOrder(accept);
-                if (order == null) return;
-                switch (SystemUser.getUser().getElementRole()) {
-                    case MANAGER: {
-                        order.setManager((Manager) SystemUser.getUser());
-                        order.setEndDateManager(Date.valueOf(LocalDate.now()));
-                        break;
-                    }
-                    case STOREKEEPER: {
-                        order.setStorekeeper((Storekeeper) SystemUser.getUser());
-                        order.setEndDateStorekeeper(Date.valueOf(LocalDate.now()));
-                        break;
-                    }
-                    case COURIER: {
-                        order.setCourier((Courier) SystemUser.getUser());
-                        order.setEndDateCourier(Date.valueOf(LocalDate.now()));
-                        break;
-                    }
-                    default:
-                        return;
-                }
-                os.update(order);
-                resp.sendRedirect("/game-store/order");
+                setAccept(accept, resp);
                 return;
             }
         }
@@ -116,5 +93,31 @@ public class OrderServlet extends HttpServlet {
         } else {
             req.setAttribute("button", "49%");
         }
+    }
+
+    private void setAccept(String accept, HttpServletResponse resp) throws IOException {
+        Order order = os.getOrder(accept);
+        if (order == null) return;
+        switch (SystemUser.getUser().getElementRole()) {
+            case MANAGER: {
+                order.setManager((Manager) SystemUser.getUser());
+                order.setEndDateManager(Date.valueOf(LocalDate.now()));
+                break;
+            }
+            case STOREKEEPER: {
+                order.setStorekeeper((Storekeeper) SystemUser.getUser());
+                order.setEndDateStorekeeper(Date.valueOf(LocalDate.now()));
+                break;
+            }
+            case COURIER: {
+                order.setCourier((Courier) SystemUser.getUser());
+                order.setEndDateCourier(Date.valueOf(LocalDate.now()));
+                break;
+            }
+            default:
+                return;
+        }
+        os.update(order);
+        resp.sendRedirect("/game-store/order");
     }
 }
