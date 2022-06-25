@@ -4,6 +4,9 @@ import intarfaces.Entity;
 import models.Criterion;
 import models.Product;
 import models.enums.EProduct;
+import models.enums.Operator;
+import models.enums.OrderBy;
+import services.CriterionService;
 import services.ParseAgeLimit;
 import services.ServiceHibernate;
 
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ProductService extends EntityService {
+    private static final CriterionService cs = new CriterionService();
 
     @Override
     public void createTable() {
@@ -34,6 +38,7 @@ public final class ProductService extends EntityService {
             ServiceHibernate.getSession().createSQLQuery(getInsertQuery())
                     .setParameter(EProduct.id_product.toString(), product.getId())
                     .setParameter(EProduct.name.toString(), product.getName())
+                    .setParameter(EProduct.picture.toString(), product.getPicture())
                     .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
                     .setParameter(EProduct.destination.toString(), product.getDescription())
                     .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
@@ -51,6 +56,7 @@ public final class ProductService extends EntityService {
             ServiceHibernate.getSession().createSQLQuery(getUpdateQuery())
                     .setParameter(EProduct.id_product.toString(), product.getId())
                     .setParameter(EProduct.name.toString(), product.getName())
+                    .setParameter(EProduct.picture.toString(), product.getPicture())
                     .setParameter(EProduct.date_of_release.toString(), product.getDateOfRelease())
                     .setParameter(EProduct.destination.toString(), product.getDescription())
                     .setParameter(EProduct.age_limit.toString(), product.getAgeLimit())
@@ -138,7 +144,11 @@ public final class ProductService extends EntityService {
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.product WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.product");
+        if (criterionList.size() == 0) {
+            return sb.toString();
+        }
+        sb.append(" WHERE ");
         return useCriterion(sb, criterionList);
     }
 
@@ -150,6 +160,7 @@ public final class ProductService extends EntityService {
                     Product.builder()
                             .id((String) o[EProduct.id_product.ordinal()])
                             .name((String) o[EProduct.name.ordinal()])
+                            .picture((String) o[EProduct.picture.ordinal()])
                             .dateOfRelease((Date) o[EProduct.date_of_release.ordinal()])
                             .description((String) o[EProduct.destination.ordinal()])
                             .ageLimit(ParseAgeLimit.getAgeLimit((Integer) o[EProduct.age_limit.ordinal()]))
@@ -158,5 +169,23 @@ public final class ProductService extends EntityService {
             );
         }
         return productList;
+    }
+
+    public Product getProduct(String id) {
+        cs.clear();
+        cs.addCriterion(EProduct.id_product, id);
+        @SuppressWarnings("unchecked")
+        List<Product> products = (List<Product>) select(cs.getCriterionList());
+        return products.size() != 0 ? products.get(0) : null;
+    }
+
+    public List<Product> getProducts(String name) {
+        cs.clear();
+        if (name != null) {
+            cs.addCriterion(EProduct.name, Operator.LIKE, "%" + name + "%");
+        }
+        @SuppressWarnings("unchecked")
+        List<Product> products = (List<Product>) select(cs.getCriterionList(), EProduct.price, OrderBy.DESC);
+        return products;
     }
 }

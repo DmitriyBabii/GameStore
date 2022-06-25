@@ -8,6 +8,7 @@ import lombok.Setter;
 import models.figures.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +18,9 @@ import java.util.UUID;
 @Builder
 public class Order implements Entity {
     private final String id;
-    private final Manager manager;
-    private final Storekeeper storekeeper;
-    private final Courier courier;
+    private Manager manager;
+    private Storekeeper storekeeper;
+    private Courier courier;
     private final Client client;
     @Setter(AccessLevel.NONE)
     private List<Product> products;
@@ -28,6 +29,21 @@ public class Order implements Entity {
     private Date endDateManager;
     private Date endDateStorekeeper;
     private Date endDateCourier;
+    private Boolean cancel;
+
+
+    public Order(Client client, List<Product> products) {
+        this.id = UUID.randomUUID().toString();
+        this.client = client;
+        this.products = products;
+        Double sum = 0.0;
+        for (Product p : products) {
+            sum += p.getPrice();
+        }
+        this.price = sum;
+        this.startOrder = Date.valueOf(LocalDate.now());
+        this.cancel = false;
+    }
 
     public Order(Manager manager, Storekeeper storekeeper, Courier courier, Client client,
                  List<Product> products, Double price, Date startOrder) {
@@ -41,6 +57,7 @@ public class Order implements Entity {
         this.startOrder = startOrder;
         this.endDateStorekeeper = null;
         this.endDateCourier = null;
+        this.cancel = false;
     }
 
     /**
@@ -49,7 +66,7 @@ public class Order implements Entity {
     @SuppressWarnings("unused")
     public Order(String id, Manager manager, Storekeeper storekeeper, Courier courier,
                  Client client, List<Product> products, Double price, Date startOrder,
-                 Date endDateManager, Date endDateStorekeeper, Date endDateCourier) {
+                 Date endDateManager, Date endDateStorekeeper, Date endDateCourier, Boolean cancel) {
         this.id = id;
         this.manager = manager;
         this.storekeeper = storekeeper;
@@ -61,6 +78,7 @@ public class Order implements Entity {
         this.endDateManager = endDateManager;
         this.endDateStorekeeper = endDateStorekeeper;
         this.endDateCourier = endDateCourier;
+        this.cancel = cancel;
     }
 
     public void addProduct(Product... product) {

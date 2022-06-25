@@ -132,7 +132,11 @@ public class WaitingProductService extends EntityService {
 
     @Override
     protected String getSelectQuery(List<Criterion> criterionList) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.waiting_product WHERE ");
+        StringBuilder sb = new StringBuilder("SELECT * FROM game_shop.waiting_product");
+        if (criterionList.size() == 0) {
+            return sb.toString();
+        }
+        sb.append(" WHERE ");
         return useCriterion(sb, criterionList);
     }
 

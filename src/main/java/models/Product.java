@@ -11,17 +11,20 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class Product implements Entity {
     private final String id;
     private final String name;
+    private final String picture;
     private final Date dateOfRelease;
     private String description;
     private AgeLimit ageLimit;
     private Double price;
 
-    public Product(String name, Date dateOfRelease, String description, AgeLimit ageLimit, Double price) {
+    public Product(String name, String picture, Date dateOfRelease, String description, AgeLimit ageLimit, Double price) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
+        this.picture = picture;
         this.dateOfRelease = dateOfRelease;
         this.description = description;
         this.ageLimit = ageLimit;

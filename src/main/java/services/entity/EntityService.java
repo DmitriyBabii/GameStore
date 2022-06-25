@@ -1,8 +1,10 @@
 package services.entity;
 
 import intarfaces.Entity;
+import intarfaces.EntityEnum;
 import intarfaces.EntityRealize;
 import models.Criterion;
+import models.enums.OrderBy;
 import org.hibernate.query.NativeQuery;
 import services.ServiceHibernate;
 
@@ -24,6 +26,23 @@ public abstract class EntityService implements EntityRealize {
         ServiceHibernate.open();
         @SuppressWarnings("rawtypes")
         NativeQuery query = ServiceHibernate.getSession().createSQLQuery(getSelectQuery(criterionList));
+        for (Criterion criterion : criterionList) {
+            if (criterion.getValue() != null) {
+                query.setParameter(criterion.getParameter().toString(), criterion.getValue());
+            }
+        }
+        @SuppressWarnings("unchecked")
+        List<Object[]> resultList = query.list();
+        ServiceHibernate.close();
+
+        return getEntities(resultList);
+    }
+
+    public final List<? extends Entity> select(List<Criterion> criterionList, EntityEnum param, OrderBy orderBy) {
+        ServiceHibernate.open();
+        @SuppressWarnings("rawtypes")
+        NativeQuery query = ServiceHibernate.getSession()
+                .createSQLQuery(getSelectQuery(criterionList) + " ORDER BY " + param + orderBy.toString());
         for (Criterion criterion : criterionList) {
             if (criterion.getValue() != null) {
                 query.setParameter(criterion.getParameter().toString(), criterion.getValue());

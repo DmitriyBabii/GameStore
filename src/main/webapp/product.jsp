@@ -6,6 +6,7 @@
 <%@ page import="models.*"%>
 <%@ page import="services.servlets.StoreServlet"%>
 <%@ page import="services.ServiceHibernate"%>
+<%@ page import="models.Rating"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -136,6 +137,7 @@ input, input::placeholder{
     font-family: 'Trebuchet MS';
     margin-top: 50px;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .chapter::after{
@@ -360,6 +362,62 @@ input, input::placeholder{
     text-decoration: none;
     border: none;
 }
+
+.review-block{
+    border-top: 1px solid #009800;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.user{
+    font-weight: bold;
+    margin-left: 50px;
+    margin-bottom: 5px;
+}
+
+.review{
+    margin: 30px;
+    margin-top:10px;
+    font-size: 20px;
+}
+
+.date{
+    color: #798C79;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.user, .review, .date{
+    font-family: 'Helvetica';
+}
+
+.create-review{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 3px;
+            color: black;
+            text-decoration: none;
+            font-size: 20px;
+            font-family: 'Helvetica';
+            color: white;
+            height: 40px;
+            width: 100%;
+            background-color: #009800;
+            border-radius: 5px;
+            border: 0;
+    }
+
+    .review-bar{
+        height: 250px
+    }
+
+    .review-text{
+        height: 90%;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
     </style>
 </head>
 <body>
@@ -379,15 +437,49 @@ input, input::placeholder{
     <div class="content-box">
         <h1 class="chapter">Product</h1>
         <div class="store">
-        <div class='store-game'><div class='image'>
-            <img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='"+product.getName()+"'>
-            <form  method='post'><button class='to-cart' name='to-cart' type='submit'>To cart</button></form></div>
-            <div class='text-block'>
-                <h2 class='game-name'>product.getName()</h2>
-                <p class="game-date">Date: some date</p>
-                <p class="game-age-limit">Age limit: 18</p>
-                <p class='description'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p></div>
+        <%
+            Product product =(Product) request.getAttribute("product");
+
+            out.print("<div class='store-game'><div class='image'>");
+            out.print("<img src='"+product.getPicture()+"' alt='"+product.getName()+"'>");
+            out.print("<form  method='post'><button class='to-cart' name='to-cart' type='submit'>" + product.getPrice() + "$</button></form></div>");
+            out.print("<div class='text-block'>");
+            out.print("<h2 class='game-name'>" + product.getName() + "</h2>");
+            out.print("<p class='game-date'><b><i>Date of release:</i></b> " + product.getDateOfRelease() + "</p>");
+            out.print("<p class='game-age-limit'><b><i>Age limit:</i></b> " + product.getAgeLimit() + "+</p>");
+            out.print("<p class='description'>");
+            out.print(product.getDescription());
+            out.print("</p></div>");
+        %>
             </div>
+
+            </div>
+
+            <%
+                List<? extends Entity> ratings = (List<? extends Entity>) request.getAttribute("review");
+
+                if(ratings.size() > 0){
+                    out.print("<h2 class='chapter'>Review</h2>");
+                }
+
+                for(Entity r: ratings){
+                Rating rating = (Rating) r;
+                    out.print("<div class='review-block'>");
+                    out.print("<div class='text-block'>");
+                    out.print("<h2 class='user'>" + rating.getClient().getUsername() + "<h2>");
+                    out.print("<div class='review'>" + rating.getReview() + "</div>");
+                    out.print("<div class='date'>" + rating.getReviewDate() + "</div>");
+                    out.print("</div></div>");
+                }
+            %>
+            <%
+            if(SystemUser.isPresent()){
+                out.print("<h2 class='chapter'>Leave review</h2>");
+                out.print("<form class='review-bar'>");
+                out.print("<input class='review-text' name='review' type='text' placeholder='    Leave a review'>");
+                out.print("</form>");
+            }
+            %>
         </div>
     </div>
     <footer class="footer-box">

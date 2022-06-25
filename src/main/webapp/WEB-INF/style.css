@@ -190,6 +190,7 @@ input, input::placeholder{
     align-items: center;
     width: 100%;
     margin: 30px;
+    margin-left: 0;
     border-radius: 5px;
 }
 
@@ -221,10 +222,16 @@ input, input::placeholder{
     font-family: 'Helvetica';
     font-size: 30px;
     text-align: center;
-    border-bottom: 2px solid black;
-    border-radius: 2px;
-    padding-top: 15px;
-    margin-bottom: 10px;
+}
+
+.name::after{
+    display: block;
+    content: ''; 
+    height: 2px; 
+    width: 100%; 
+    background-color: black; 
+    margin-top: 15px;
+    margin-bottom: 20px;
 }
 
 .choose-form div{
@@ -234,18 +241,23 @@ input, input::placeholder{
 }
 
 .login-form{
+    padding-top: 60px;
     margin-left: 15px;
     width: 25%;
 }
 
 .fill-form{
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
 }
 
 .fill{
     height: 40px;
-    margin-bottom: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: #D1DDCD;
     border: 1px solid #009800;
     border-radius: 5px;
 }
@@ -254,12 +266,32 @@ input, input::placeholder{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 30px;
+    margin-top: 5px;
+    height: 40px;
+    width: 70%;
     background-color: #009800;
     border-radius: 3px;
     color: white;
     text-decoration: none;
+    font-family: 'Helvetica';
+    font-size: 18px;
     border: none;
+}
+
+.register-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    height: 25px;
+    width: 70%;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
+    color: black;
+    text-decoration: none;
+    font-family: 'Helvetica';
+    font-size: 14px;
+    border: 1px solid #009800;
 }
 
 
@@ -278,7 +310,7 @@ input, input::placeholder{
 
 .footer-box a{
     color: white;
-    font-size: 30px;
+    font-size: 25px;
     font-family: 'Trebuchet MS';
     text-decoration: none;
     border: none;

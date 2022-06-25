@@ -17,4 +17,13 @@ public class Criterion {
         this.operator = Operator.EQUALS;
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "Criterion{" +
+                "parameter=" + parameter +
+                ", operator=" + operator +
+                ", value=" + value +
+                '}';
+    }
 }

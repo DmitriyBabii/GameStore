@@ -1,17 +1,10 @@
-<%@ page import="services.CriterionService"%>
-<%@ page import="models.enums.*"%>
-<%@ page import="java.util.List"%>
-<%@ page import="services.entity.*"%>
-<%@ page import="intarfaces.Entity"%>
-<%@ page import="models.*"%>
-<%@ page import="services.servlets.StoreServlet"%>
-<%@ page import="services.ServiceHibernate"%>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Product</title>
+    <title>Log in</title>
+    <link rel="stylesheet" href="css/style.css">
+
     <style>
 /*START SETTINGS*/
 *, *::before, *::after{
@@ -163,7 +156,6 @@ input, input::placeholder{
 .game-name{
     margin-top: 10px;
     margin-bottom: 0;
-    font-family: 'Helvetica';
     text-align: center;
 }
 
@@ -176,8 +168,7 @@ input, input::placeholder{
 
 /*STORE*/
 .store-game{
-    display: flex;
-    width: 100%;
+    width: 230px;
     margin-top: 30px;
     margin-left: 30px;
     margin-right: 30px;
@@ -185,21 +176,12 @@ input, input::placeholder{
     border-radius: 5px;
 }
 
-.store-game .text-block{
-    display: flex;
-    justify-content: start;
-    flex-direction: column;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-left: 25px;
-    text-align: center;
-    font-family: 'Helvetica';
+.store-game:hover{
+    background-color: #B8EAA8;
 }
 
-.text-block p{
-    text-align: justify;
-    margin: 10px;
-    font-size: 20px;
+.store-game h2{
+    font-family: 'Trebuchet MS';
 }
 
 .store-game img{
@@ -210,26 +192,6 @@ input, input::placeholder{
 
 
 /*CART*/
-.to-cart{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5px;
-    height: 40px;
-    width: 100%;
-    background-color: ${color};
-    border-radius: 3px;
-    color: ${text};
-    text-decoration: none;
-    font-family: 'Helvetica';
-    font-size: 18px;
-    border: 2px solid #009800;
-}
-
-.to-cart:hover{
-    background-color: #17B117;
-}
-
 .cart-game{
     display: flex;
     align-items: center;
@@ -259,7 +221,7 @@ input, input::placeholder{
     width: 100%;
     background-image:
     linear-gradient(to left, rgba(232, 255, 225, 0), rgba(232, 255, 225, 1)),
-     url('/Обучение/Универ/2 КУРС/2 семестр/ТКП/Kursovaja/GameStore/src/main/java/web/img/log_in.jpg');
+     url('https://images.ctfassets.net/5lpapfxq15sk/1BMmGdciozsPwqKroYYjHe/fef1914f155c9ee4397e6ae30c9a2964/amazongames-NW-ka.jpg');
      background-size: cover;
 }
 
@@ -267,6 +229,7 @@ input, input::placeholder{
     font-family: 'Helvetica';
     font-size: 30px;
     text-align: center;
+    color: ${color};
 }
 
 .name::after{
@@ -274,7 +237,7 @@ input, input::placeholder{
     content: '';
     height: 2px;
     width: 100%;
-    background-color: black;
+    background-color: ${color};
     margin-top: 15px;
     margin-bottom: 20px;
 }
@@ -302,7 +265,7 @@ input, input::placeholder{
     height: 40px;
     width: 100%;
     margin-bottom: 20px;
-    background-color: #D1DDCD;
+    background-color: white;
     border: 1px solid #009800;
     border-radius: 5px;
 }
@@ -321,6 +284,15 @@ input, input::placeholder{
     font-family: 'Helvetica';
     font-size: 18px;
     border: none;
+}
+
+.fill-button:hover{
+    background-color: #17B117;
+}
+
+#password{
+    -webkit-text-security: circle;
+    font-size: 30px;
 }
 
 .register-button{
@@ -361,6 +333,7 @@ input, input::placeholder{
     border: none;
 }
     </style>
+
 </head>
 <body>
     <nav class="nav-box">
@@ -377,16 +350,15 @@ input, input::placeholder{
         </div>
     </nav>
     <div class="content-box">
-        <h1 class="chapter">Product</h1>
-        <div class="store">
-        <div class='store-game'><div class='image'>
-            <img src='https://it.itorrents-igruha.org/uploads/posts/2021-10/1633347917_cover1.jpg' alt='"+product.getName()+"'>
-            <form  method='post'><button class='to-cart' name='to-cart' type='submit'>To cart</button></form></div>
-            <div class='text-block'>
-                <h2 class='game-name'>product.getName()</h2>
-                <p class="game-date">Date: some date</p>
-                <p class="game-age-limit">Age limit: 18</p>
-                <p class='description'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p></div>
+        <div class="login">
+            <div class="login-form">
+                <div class="name">${data}</div>
+                <form method="post" class="fill-form">
+                    <input name="username" class="fill" type="text" placeholder="   Username">
+                    <input id="password" name="password" class="fill" type="text" placeholder="   Password">
+                    <button class="fill-button" type="submit">Confirm</button>
+                    <a class="register-button" href="login?exit=true">Exit</a>
+                </form>
             </div>
         </div>
     </div>
