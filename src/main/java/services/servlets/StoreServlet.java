@@ -1,8 +1,6 @@
 package services.servlets;
 
-import models.Product;
 import models.SystemUser;
-import services.ServiceHibernate;
 import services.entity.ProductService;
 
 import javax.servlet.ServletException;
@@ -21,7 +19,7 @@ public class StoreServlet extends HttpServlet {
         //ServiceHibernate.start();
         String param = req.getParameter("game");
 
-        req.setAttribute("products", ps.getProducts(param));
+    req.setAttribute("products", ps.getProducts(param));
 
         if (SystemUser.isPresent()) {
             String account = SystemUser.getUser().getUsername()
