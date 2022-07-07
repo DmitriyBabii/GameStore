@@ -36,7 +36,6 @@ public final class OrderService extends EntityService {
         for (EProductInOrder order : EProductInOrder.values()) {
             strProductInOrder.append(order.getQuery());
         }
-        System.out.println(strProductInOrder);
         ServiceHibernate.getSession().createSQLQuery(strProductInOrder.toString())
                 .executeUpdate();
         ServiceHibernate.close();
@@ -388,8 +387,6 @@ public final class OrderService extends EntityService {
         cs.clear();
         cs.addCriterion(EOrder.id_order, id);
         Order order = (Order) select(cs.getCriterionList()).get(0);
-        System.out.println(order);
-        System.out.println(order.getProducts());
         return order.getProducts();
     }
 

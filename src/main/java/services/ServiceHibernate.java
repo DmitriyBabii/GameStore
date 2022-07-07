@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class ServiceHibernate {
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -123,6 +124,21 @@ public class ServiceHibernate {
                 new Product("Tiny Tina's Wonderlands", "https://it.itorrents-igruha.org/uploads/posts/2022-02/1644177409_cover.jpg",
                         Date.valueOf(LocalDate.now()), "Tiny Tina's Wonderlands is a fantasy shooter that will be announced in 2022. Get ready for a brand new adventure! Tiny Tina's Wonderlands has been officially announced at the Kickoff Live Summer Game Fest. Ashly Burch joined host Geoff Keighley to talk about her character Tiny Tina, the beloved star\n" +
                         "falling in Wonderland Tiny Tina. In the game, Tina is your guide to an unusual and chaotic fantasy realm. Download Tiny Tina's Wonderlands for free via torrent in Russian on our website you can now!",
+                        AgeLimit._18, 500.0),
+                new Product("Conan Exiles", "https://it.itorrents-igruha.org/uploads/posts/2022-01/1641516227_cover.jpg",
+                        Date.valueOf(LocalDate.now()), "Dare to Stay - in a small town located somewhere in Pennsylvania, something completely strange begins to happen. The evil forces that once haunted an ordinary family are returning again. Well, well, you will play as a rather fearless investigator and together with him you must solve the problem looming over the city!",
+                        AgeLimit._18, 500.0),
+                new Product("Dare to Stay", "https://it.itorrents-igruha.org/uploads/posts/2022-07/1656683517_dare-to-stay-pc-free-download.jpg",
+                        Date.valueOf(LocalDate.now()), "Dare to Stay - in a small town located somewhere in Pennsylvania, something completely strange begins to happen. The evil forces that once haunted an ordinary family are returning again. Well, well, you will play as a rather fearless investigator and together with him you must solve the problem looming over the city!", AgeLimit._18, 500.0),
+                new Product("White Shadows", "https://it.itorrents-igruha.org/uploads/posts/2020-09/1599483831_4.jpg",
+                        Date.valueOf(LocalDate.now()), "Not always the heroes of interactive adventures are eager to be bright, pleasant and do good. Some of them seek darkness in order to reveal the truth, to become a victim and a criminal. Today's story will touch the dark times,\n" +
+                        "when almost all of humanity was wiped off the face of the earth and only small cities were able to provide themselves with constant light. After all, they say that the main element of the plague that killed everyone was darkness. What is in it? Why do people try to avoid shadows? These questions can only be answered if\n" +
+                        "if you become one with darkness. But is it worth taking this step? It's up to you to decide, as the hero is ready for this and will definitely not back down.",
+                        AgeLimit._18, 500.0),
+                new Product("Assetto Corsa Competizione", "https://it.itorrents-igruha.org/uploads/posts/2019-05/1559215977__cover.jpg",
+                        Date.valueOf(LocalDate.now()), "The game Assetto Corsa Competizione torrent download which is free to download, is a new official project for the Blancpain GT Series racing tournament.\n" +
+                        "With outstanding simulation quality, this game will let you experience the atmosphere of the GT3 championship as you compete against famous drivers and famous teams on recreated tracks.\n" +
+                        "All elements in the game are made with the utmost attention to detail, which made it possible to convey the spirit of real competitions. Experience an incredible level of racing realism in modes such as Sprint, Spa 24 Hours and Long Distance Ride in solo and multiplayer modes.",
                         AgeLimit._18, 500.0)
         };
 
@@ -140,15 +156,35 @@ public class ServiceHibernate {
                 "+380504121867", "1.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
         Storekeeper storekeeper = new Storekeeper("Storekeeper", "Babii", "Mitar2", "Babii0706",
                 "+380504221867", "2.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
+
+        Courier[] couriers = new Courier[6];
+        for (int i = 0; i < couriers.length; i++) {
+            couriers[i] = new Courier("Co" + i, "Babii", "co" + i, "Babii0706",
+                    "+38050422187" + i, i + "2.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
+        }
+
         Courier courier = new Courier("Courier", "Babii", "Mitar3", "Babii0706",
                 "+380504321867", "3.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
 
-        List<Product> productList = new ArrayList<>();
+        /*List<Product> productList = new ArrayList<>();
         productList.add(products[0]);
         productList.add(products[1]);
         Order order = new Order(manager, storekeeper, courier, client,
                 productList, 2200.0, Date.valueOf(LocalDate.now()));
+         */
 
+        Order[] orders = new Order[15];
+        for (int i = 0; i < orders.length; i++) {
+            Random rand = new Random();
+            List<Product> productList = new ArrayList<>();
+            for (int j = 0; j < 3; j++) {
+                productList.add(products[rand.nextInt(products.length)]);
+            }
+            orders[i] = new Order(manager, storekeeper, null, client,
+                    productList, Date.valueOf(LocalDate.now()));
+        }
+
+        System.out.println(orders[0].getProducts());
 
         Entity[] entities = {
                 client, manager, storekeeper, courier
@@ -166,36 +202,37 @@ public class ServiceHibernate {
         productService.save(products);
         storageService.save(storage);
         userService.save(entities);
+        userService.save(couriers);
         ratingService.save(rating);
-        //orderService.save(order);
+        orderService.save(orders);
         waitingProductService.save(waitingProduct);
         reservedProductService.save(reservedProduct);
 
-        products[0].setPrice(0.1);
+        /*products[0].setPrice(0.1);
         storage.setQuantity(1);
         client.setName("1");
         manager.setName("1");
         storekeeper.setName("1");
         courier.setName("1");
         rating.setReview("1");
-        order.setEndDateStorekeeper(Date.valueOf(LocalDate.now()));
-        order.addProduct(products[2]);
+        //order.setEndDateStorekeeper(Date.valueOf(LocalDate.now()));
+        //order.addProduct(products[2]);
         waitingProduct.setQuantity(2);
-        reservedProduct.setQuantity(2);
+        reservedProduct.setQuantity(2);*/
 
-        productService.update(products[0]);
+        /*productService.update(products[0]);
         storageService.update(storage);
         userService.update(client);
         userService.update(manager);
         userService.update(storekeeper);
         userService.update(courier);
         ratingService.update(rating);
-        orderService.update(order);
+        //orderService.update(order);
         waitingProductService.update(waitingProduct);
-        reservedProductService.update(reservedProduct);
+        reservedProductService.update(reservedProduct);*/
 
 
-        CriterionService criterionProduct = new CriterionService();
+        /*CriterionService criterionProduct = new CriterionService();
         criterionProduct.addCriterion(EProduct.name, "Witcher 3");
         criterionProduct.addCriterion(EProduct.price, Operator.NOT_EQUALS, 2.2);
         System.out.println(productService.select(criterionProduct.getCriterionList()));
@@ -223,7 +260,7 @@ public class ServiceHibernate {
 
         CriterionService criterionReserved = new CriterionService();
         criterionReserved.addCriterion(EReservedProduct.quantity, 2);
-        System.out.println(reservedProductService.select(criterionReserved.getCriterionList()));
+        System.out.println(reservedProductService.select(criterionReserved.getCriterionList()));*/
 
         /*storageService.delete(storage);
         orderService.delete(order);

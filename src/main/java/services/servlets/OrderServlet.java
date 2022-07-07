@@ -34,6 +34,7 @@ public class OrderServlet extends HttpServlet {
                     + SystemUser.getUser().getRole().charAt(1) + ")";
 
             setButtonSize(req);
+            //System.out.println(getOrders());
             req.setAttribute("orders", getOrders());
             req.setAttribute("account", account);
         } else {
@@ -43,7 +44,6 @@ public class OrderServlet extends HttpServlet {
 
         if (SystemUser.isPresent()) {
             if (idOrder != null) {
-                System.out.println(os.getProducts(idOrder));
                 req.setAttribute("idOrder", idOrder);
                 req.setAttribute("productsInOrder", os.getProducts(idOrder));
                 req.setAttribute("orderEntity", os.getOrder(idOrder));

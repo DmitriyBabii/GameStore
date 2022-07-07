@@ -1,6 +1,7 @@
 package services.servlets;
 
 import models.SystemUser;
+import services.ServiceHibernate;
 import services.entity.ProductService;
 
 import javax.servlet.ServletException;
@@ -16,7 +17,7 @@ public class StoreServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //ServiceHibernate.start();
+        ServiceHibernate.start();
         String param = req.getParameter("game");
 
     req.setAttribute("products", ps.getProducts(param));

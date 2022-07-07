@@ -36,27 +36,24 @@ public class Order implements Entity {
         this.id = UUID.randomUUID().toString();
         this.client = client;
         this.products = products;
-        Double sum = 0.0;
-        for (Product p : products) {
-            sum += p.getPrice();
-        }
-        this.price = sum;
+        this.price = getSum();
         this.startOrder = Date.valueOf(LocalDate.now());
         this.cancel = false;
     }
 
     public Order(Manager manager, Storekeeper storekeeper, Courier courier, Client client,
-                 List<Product> products, Double price, Date startOrder) {
+                 List<Product> products, Date startOrder) {
         this.id = UUID.randomUUID().toString();
         this.manager = manager;
         this.storekeeper = storekeeper;
         this.courier = courier;
         this.client = client;
         this.products = products;
-        this.price = price;
+        this.price = getSum();
         this.startOrder = startOrder;
-        this.endDateStorekeeper = null;
-        this.endDateCourier = null;
+        this.endDateManager = (manager != null) ? Date.valueOf(LocalDate.now()) : null;
+        this.endDateStorekeeper = (storekeeper != null) ? Date.valueOf(LocalDate.now()) : null;
+        this.endDateCourier = (courier != null) ? Date.valueOf(LocalDate.now()) : null;
         this.cancel = false;
     }
 
@@ -83,6 +80,14 @@ public class Order implements Entity {
 
     public void addProduct(Product... product) {
         Collections.addAll(products, product);
+    }
+
+    private double getSum() {
+        Double sum = 0.0;
+        for (Product p : products) {
+            sum += p.getPrice();
+        }
+        return sum;
     }
 
     @Override

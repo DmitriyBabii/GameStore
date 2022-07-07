@@ -55,6 +55,17 @@ public abstract class EntityService implements EntityRealize {
         return getEntities(resultList);
     }
 
+    public static List<?> nativeQuery(String query) {
+        ServiceHibernate.open();
+        @SuppressWarnings("unchecked")
+        List<Object[]> resultList = ServiceHibernate.getSession()
+                .createSQLQuery(query).list();
+
+        ServiceHibernate.close();
+
+        return resultList;
+    }
+
     protected abstract String getSelectQuery(List<Criterion> criterionList);
 
     protected final String useCriterion(StringBuilder sb, List<Criterion> criterionList) {
