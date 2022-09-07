@@ -492,8 +492,9 @@
                             for(Object[] o: list){
                                 out.print("<a class='cart-game'>");
                                 out.print("<div class='text-block'>");
-                                out.print("<p>Count of orders: " + o[0] + "</p>");
-                                out.print("<p>Courier name: " + o[1] + "</p>");
+                                out.print("<p>Count: " + o[0] + "</p>");
+                                out.print("<p>Sum: " + o[1] + "</p>");
+                                out.print("<p>Name: " + o[2] + "</p>");
                                 out.print("</div></a>");
                             }
                             }

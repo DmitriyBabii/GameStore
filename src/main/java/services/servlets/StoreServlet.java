@@ -17,7 +17,7 @@ public class StoreServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ServiceHibernate.start();
+        //ServiceHibernate.start();
         String param = req.getParameter("game");
 
     req.setAttribute("products", ps.getProducts(param));

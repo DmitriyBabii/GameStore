@@ -75,6 +75,21 @@ public final class OrderService extends EntityService {
     }
 
     @Override
+    protected String getInsertQuery() {
+        return "INSERT INTO game_shop.order (" + getColumns() +
+                ") VALUES(" +
+                getParams() +
+                ")";
+    }
+
+    protected String getInsertQueryForProducts() {
+        return "INSERT INTO game_shop.product_in_order (" + getColumnsForProducts() +
+                ") VALUES(" +
+                getParamsForProducts() +
+                ")";
+    }
+
+    @Override
     public void update(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
@@ -99,6 +114,26 @@ public final class OrderService extends EntityService {
                     .executeUpdate();
             ServiceHibernate.close();
         }
+    }
+
+    @Override
+    protected String getUpdateQuery() {
+        StringBuilder sb = new StringBuilder("UPDATE game_shop.order SET ");
+
+        String[] columns = getColumns().split(",");
+        String[] params = getParams().split(",");
+
+        for (int i = 1; i < columns.length; i++) {
+            sb.append(columns[i])
+                    .append("=")
+                    .append(params[i])
+                    .append((i < columns.length - 1) ? ", " : " ");
+        }
+        sb.append("WHERE ")
+                .append(columns[EOrder.id_order.ordinal()])
+                .append("=")
+                .append(params[EOrder.id_order.ordinal()]);
+        return sb.toString();
     }
 
     @Override
@@ -158,41 +193,6 @@ public final class OrderService extends EntityService {
             sb.append(":").append(p)
                     .append((++count < EProductInOrder.values().length) ? "," : "");
         }
-        return sb.toString();
-    }
-
-    @Override
-    protected String getInsertQuery() {
-        return "INSERT INTO game_shop.order (" + getColumns() +
-                ") VALUES(" +
-                getParams() +
-                ")";
-    }
-
-    protected String getInsertQueryForProducts() {
-        return "INSERT INTO game_shop.product_in_order (" + getColumnsForProducts() +
-                ") VALUES(" +
-                getParamsForProducts() +
-                ")";
-    }
-
-    @Override
-    protected String getUpdateQuery() {
-        StringBuilder sb = new StringBuilder("UPDATE game_shop.order SET ");
-
-        String[] columns = getColumns().split(",");
-        String[] params = getParams().split(",");
-
-        for (int i = 1; i < columns.length; i++) {
-            sb.append(columns[i])
-                    .append("=")
-                    .append(params[i])
-                    .append((i < columns.length - 1) ? ", " : " ");
-        }
-        sb.append("WHERE ")
-                .append(columns[EOrder.id_order.ordinal()])
-                .append("=")
-                .append(params[EOrder.id_order.ordinal()]);
         return sb.toString();
     }
 

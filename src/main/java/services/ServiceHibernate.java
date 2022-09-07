@@ -126,7 +126,7 @@ public class ServiceHibernate {
                         "falling in Wonderland Tiny Tina. In the game, Tina is your guide to an unusual and chaotic fantasy realm. Download Tiny Tina's Wonderlands for free via torrent in Russian on our website you can now!",
                         AgeLimit._18, 500.0),
                 new Product("Conan Exiles", "https://it.itorrents-igruha.org/uploads/posts/2022-01/1641516227_cover.jpg",
-                        Date.valueOf(LocalDate.now()), "Dare to Stay - in a small town located somewhere in Pennsylvania, something completely strange begins to happen. The evil forces that once haunted an ordinary family are returning again. Well, well, you will play as a rather fearless investigator and together with him you must solve the problem looming over the city!",
+                        Date.valueOf(LocalDate.now()), "Dare to Stay - in a small town locat``ed somewhere in Pennsylvania, something completely strange begins to happen. The evil forces that once haunted an ordinary family are returning again. Well, well, you will play as a rather fearless investigator and together with him you must solve the problem looming over the city!",
                         AgeLimit._18, 500.0),
                 new Product("Dare to Stay", "https://it.itorrents-igruha.org/uploads/posts/2022-07/1656683517_dare-to-stay-pc-free-download.jpg",
                         Date.valueOf(LocalDate.now()), "Dare to Stay - in a small town located somewhere in Pennsylvania, something completely strange begins to happen. The evil forces that once haunted an ordinary family are returning again. Well, well, you will play as a rather fearless investigator and together with him you must solve the problem looming over the city!", AgeLimit._18, 500.0),
@@ -151,6 +151,13 @@ public class ServiceHibernate {
 
         Client client = new Client("Dima", "Babii", "Mitar", "Babii0706",
                 "+380504021867", "v.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
+
+        Client[] clients = new Client[6];
+        for (int i = 0; i < clients.length; i++) {
+            clients[i] = new Client("Cl" + i, "Babii", "cl" + i, "Babii0706",
+                    "+3805042214" + i, i + "12.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
+        }
+
         Rating rating = new Rating(client, products[0], "dadsasd", Date.valueOf(LocalDate.now()));
         Manager manager = new Manager("Manager", "Babii", "Mitar1", "Babii0706",
                 "+380504121867", "1.babiy75@gmail.com", Date.valueOf(LocalDate.now()));
@@ -180,7 +187,7 @@ public class ServiceHibernate {
             for (int j = 0; j < 3; j++) {
                 productList.add(products[rand.nextInt(products.length)]);
             }
-            orders[i] = new Order(manager, storekeeper, null, client,
+            orders[i] = new Order(manager, storekeeper, courier, clients[rand.nextInt(clients.length)],
                     productList, Date.valueOf(LocalDate.now()));
         }
 
@@ -202,6 +209,7 @@ public class ServiceHibernate {
         productService.save(products);
         storageService.save(storage);
         userService.save(entities);
+        userService.save(clients);
         userService.save(couriers);
         ratingService.save(rating);
         orderService.save(orders);

@@ -31,13 +31,20 @@ public class TaskServlet  extends HttpServlet {
         String cancel = req.getParameter("cancel");
 
         req.setAttribute("task", EntityService.nativeQuery("SELECT \n" +
-                "    COUNT(*) AS count_of_orders, name\n" +
+                "    COUNT(*) AS count, SUM(book_shop.product.price) AS sum_price, book_shop.user.name\n" +
                 "FROM\n" +
-                "    game_shop.user\n" +
+                "    book_shop.order\n" +
                 "        INNER JOIN\n" +
-                "    game_shop.order ON game_shop.user.id_user = game_shop.order.id_user_courier_fk\n" +
+                "    book_shop.product_in_order ON book_shop.order.id_order = book_shop.product_in_order.id_order_fk\n" +
+                "        INNER JOIN\n" +
+                "    book_shop.product ON book_shop.product_in_order.id_product_fk = book_shop.product.id_product\n" +
+                "        INNER JOIN\n" +
+                "    book_shop.user ON book_shop.order.id_user_client_fk = book_shop.user.id_user\n" +
+                "WHERE\n" +
+                "    book_shop.order.end_date_courier IS NOT NULL\n" +
                 "GROUP BY name\n" +
-                "ORDER BY count_of_orders DESC limit 5;"));
+                "ORDER BY sum_price DESC\n" +
+                "LIMIT 5;"));
 
         if (SystemUser.isPresent()) {
             String account = SystemUser.getUser().getUsername()

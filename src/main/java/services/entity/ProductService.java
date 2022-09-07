@@ -6,6 +6,7 @@ import models.Product;
 import models.enums.EProduct;
 import models.enums.Operator;
 import models.enums.OrderBy;
+import org.hibernate.query.NativeQuery;
 import services.CriterionService;
 import services.ParseAgeLimit;
 import services.ServiceHibernate;
@@ -49,6 +50,36 @@ public final class ProductService extends EntityService {
     }
 
     @Override
+    protected String getInsertQuery() {
+        return "INSERT INTO game_shop.product (" + getColumns() +
+                ") VALUES(" +
+                getParams() +
+                ")";
+    }
+
+    @Override
+    protected String getColumns() {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        for (EProduct p : EProduct.values()) {
+            sb.append(p)
+                    .append((++count < EProduct.values().length) ? "," : "");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    protected String getParams() {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        for (EProduct p : EProduct.values()) {
+            sb.append(":").append(p)
+                    .append((++count < EProduct.values().length) ? "," : "");
+        }
+        return sb.toString();
+    }
+
+    @Override
     public void update(Entity... entity) {
         ServiceHibernate.open();
         for (Entity value : entity) {
@@ -76,36 +107,6 @@ public final class ProductService extends EntityService {
                     .executeUpdate();
         }
         ServiceHibernate.close();
-    }
-
-    @Override
-    protected String getColumns() {
-        StringBuilder sb = new StringBuilder();
-        int count = 0;
-        for (EProduct p : EProduct.values()) {
-            sb.append(p)
-                    .append((++count < EProduct.values().length) ? "," : "");
-        }
-        return sb.toString();
-    }
-
-    @Override
-    protected String getParams() {
-        StringBuilder sb = new StringBuilder();
-        int count = 0;
-        for (EProduct p : EProduct.values()) {
-            sb.append(":").append(p)
-                    .append((++count < EProduct.values().length) ? "," : "");
-        }
-        return sb.toString();
-    }
-
-    @Override
-    protected String getInsertQuery() {
-        return "INSERT INTO game_shop.product (" + getColumns() +
-                ") VALUES(" +
-                getParams() +
-                ")";
     }
 
     @Override
